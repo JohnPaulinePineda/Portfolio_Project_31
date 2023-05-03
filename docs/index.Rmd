@@ -143,6 +143,12 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 | **[Book]** [Design and Analysis of Experiments with R](https://www.taylorfrancis.com/books/mono/10.1201/b17883/design-analysis-experiments-john-lawson) by John Lawson
 | **[Book]** [Design and Analysis of Experiments](https://link.springer.com/book/10.1007/978-3-319-52250-0) by Angela Dean , Daniel Voss and Danel Draguljić
 | **[Book]** [Design and Analysis of Experiments](https://bcs.wiley.com/he-bcs/Books?action=index&bcsId=10790&itemId=1119320933) by Douglas Montgomery
+| **[Article]** [Power and Sample Size](https://powerandsamplesize.com/) by HyLown Consulting Team
+| **[Article]** [An Introduction to Different Types of Study Design](https://s4be.cochrane.org/blog/2021/04/06/an-introduction-to-different-types-of-study-design/) by Hadi Abbas
+| **[Article]** [Case-Control and Cohort Studies: A Brief Overview](https://s4be.cochrane.org/blog/2017/12/06/case-control-and-cohort-studies-overview/) by Saul Crandon
+| **[Article]** [Cohort Studies: Prospective and Retrospective Designs](https://s4be.cochrane.org/blog/2019/03/06/cohort-studies-prospective-retrospective-designs/) by Izabel de Oliveira
+| **[Article]** [Prevalence vs. Incidence: What is the Difference](https://s4be.cochrane.org/blog/2020/11/06/prevalence-vs-incidence-what-is-the-difference/) by Georgina Ford
+| **[Article]** [Randomized Clinical Trial (RCT): Simple Definition, Phases, and Types](https://www.statisticshowto.com/experimental-design/randomized-clinical-trial-rcts/) by Statistics-How-To Team
 |
 |
 |
