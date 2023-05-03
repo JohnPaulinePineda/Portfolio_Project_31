@@ -1,7 +1,7 @@
 ---
 title: "R : Sample Size and Power Calculations for Tests Comparing Means in Clinical Research"
 author: "John Pauline Pineda"
-date: "May 5, 2023"
+date: "May 7, 2023"
 output: 
   html_document:
     toc: true
@@ -137,3 +137,13 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 ```
 
 # **2. References**
+|
+| **[Book]** [Sample Size Calculations in Clinical Research](https://www.taylorfrancis.com/books/mono/10.1201/9781315183084/sample-size-calculations-clinical-research-shein-chung-chow-jun-shao-hansheng-wang-yuliya-lokhnygina) by Shein-Chung Chow, Jun Shao, Hansheng Wang and Yuliya Lokhnygina
+| **[Book]** [Clinical Trial Data Analysis Using R and SAS](https://www.taylorfrancis.com/books/mono/10.1201/9781315155104/clinical-trial-data-analysis-using-sas-ding-geng-din-chen-karl-peace-pinggao-zhang) by Ding-Geng Chen, Karl Peace and Pinggao Zhang
+| **[Book]** [Design and Analysis of Experiments with R](https://www.taylorfrancis.com/books/mono/10.1201/b17883/design-analysis-experiments-john-lawson) by John Lawson
+| **[Book]** [Design and Analysis of Experiments](https://link.springer.com/book/10.1007/978-3-319-52250-0) by Angela Dean , Daniel Voss and Danel Draguljić
+| **[Book]** [Design and Analysis of Experiments](https://bcs.wiley.com/he-bcs/Books?action=index&bcsId=10790&itemId=1119320933) by Douglas Montgomery
+|
+|
+|
+|
