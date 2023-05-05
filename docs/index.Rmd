@@ -41,9 +41,138 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 |      **[F.2]** Minimum margin to establish that the mean response is not much worse as the reference
 |      **[F.3]** Minimum margin to establish that the mean response is no better and no worse than the reference
 |
+| A case scenario was provided as follows to demonstrate sample size computation and power analysis applying the different types of hypotheses:
+|
+| **[Case Scenario]** A clinical research study is being pursued concerning osteoporosis in post-menopausal women. Osteoporosis and osteopenia (or decreased bone mass) most commonly develop in post-menopausal women. The consequences of osteoporosis are vertebral crush fractures and hip fractures. The diagnosis of osteoporosis is made when vertebral bone density is more than 10% below what is expected for sex, age, height, weight, and race. Usually, bone density is reported in terms of standard deviation (SD) from mean values. The World Health Organization (WHO) defines osteopenia as bone density value greater than one SD below peak bone mass levels in young women and osteoporosis as a value of greater than 2.5 SD below the same measurement scale. In medical practice, most clinicians suggest therapeutic intervention should be begun in patients with osteopenia to prevent progression to osteoporosis.
+|
 ###  1.1.1 Test for Equality
-
+|
+| **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. Given a level of significance of 0.05, evaluate the sample size range to achieve statistical test powers equal to 70%, 80% and 90%.
+|
+| **[Null Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density equals 0
+|
+| **[Alternative Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density does not equal 0
+|
+| **[A]** <span style="color: #FF0000">Mean Response</span> : 2.0 to 4.0 SD at 0.20 intervals 
+|
+| **[B]** <span style="color: #FF0000">Reference</span> : 1.5 SD
+|
+| **[C]** <span style="color: #FF0000">Standard Deviation</span> : Not explicitly given but already factored into the mean values and will cancel out during computation
+|
+| **[D]** <span style="color: #FF0000">Alpha</span> : 0.05
+|
+| **[E]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
+|
+| **[F]** <span style="color: #FF0000">Testing Margin</span> : 0 for the Test of Equality hypothesis
+|
 ```{r section_1.1.1, warning=FALSE, message=FALSE}
+
+##################################
+# Loading R libraries
+##################################
+library(moments)
+library(car)
+library(multcomp)
+library(effects)
+library(psych)
+library(ggplot2)
+library(dplyr)
+library(ggpubr)
+library(rstatix)
+library(ggfortify)
+library(trend)
+
+##################################
+# Defining a range of possible hypothesized values for mu
+##################################
+mu_Response=seq(2.0,4.0,0.2)
+
+##################################
+# Defining a fixed hypothesized value for mu_0
+##################################
+mu_Reference=1.5
+
+##################################
+# Defining a fixed hypothesized value for the standard deviation
+##################################
+sd=1
+
+##################################
+# Defining a fixed hypothesized value for the Type I error
+##################################
+alpha=0.05
+
+##################################
+# Defining a range of possible hypothesized values for the Type II error
+##################################
+beta=c(0.30,0.20,0.10)
+
+##################################
+# Computing the range of samples sizes based on different levels Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=(sd*(qnorm(1-alpha/2)+qnorm(1-beta_1))/(mu_Response-mu_Reference))^2)
+ceiling(n_Beta30)
+z_Beta30=(mu_Response-mu_Reference)/(sd*sqrt(n_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/2))+pnorm(-z_Beta30-qnorm(1-alpha/2)))
+
+beta_2=beta[2]
+(n_Beta20=(sd*(qnorm(1-alpha/2)+qnorm(1-beta_2))/(mu_Response-mu_Reference))^2)
+ceiling(n_Beta20)
+z_Beta30=(mu_Response-mu_Reference)/(sd*sqrt(n_Beta20))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/2))+pnorm(-z_Beta30-qnorm(1-alpha/2)))
+
+beta_3=beta[3]
+(n_Beta10=(sd*(qnorm(1-alpha/2)+qnorm(1-beta_3))/(mu_Response-mu_Reference))^2)
+ceiling(n_Beta10)
+z_Beta30=(mu_Response-mu_Reference)/(sd*sqrt(n_Beta10))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/2))+pnorm(-z_Beta30-qnorm(1-alpha/2)))
+
+SampleSizePowerCurve <- as.data.frame(cbind(mu_Response,n_Beta30,n_Beta20,n_Beta10))
+names(SampleSizePowerCurve) <- c("Posttreatment.Mean.Bone.Density",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+SampleSizePowerCurve.Reshaped <- gather(SampleSizePowerCurve,"Power=70%","Power=80%","Power=90%",
+                                 key="Power", 
+                                 value="Sample.Size")
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(PosttreatmentMeanBoneDensity.PowerAnalysis <- ggplot(SampleSizePowerCurve.Reshaped,
+                                                      aes(x=Posttreatment.Mean.Bone.Density,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Post-Treatment Mean Bone Density",
+                      limits=c(2,4),
+                      breaks=seq(2,4,
+                                 by=0.2)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,50),
+                     breaks=seq(0,50,by=5)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        legend.key.size = unit(1,"cm"),
+        legend.key.height = unit(1,"cm"), 
+        legend.key.width = unit(1,"cm"),
+        legend.title = element_text(size=12,face="bold"), 
+        legend.text = element_text(size=12,face="bold"),
+        text=element_text(size=12),
+        axis.text.y=element_text(color="black",face="bold",hjust=0.25,size=12),
+        axis.text.x=element_text(color="black",face="bold",size=12),
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        axis.ticks.length=unit(0.25,"cm"),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("One-Sample Design : Test for Equality"))
 
 ```
 
