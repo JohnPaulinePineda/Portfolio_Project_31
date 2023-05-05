@@ -17,7 +17,11 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 ```
 
 # **1. Table of Contents**
-
+|
+| This document presents a non-exhaustive list of sample size and power calculations for clinical research mean comparison tests using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>. 
+|
+| Mean comparison tests applied during clinical research refer to trials evaluated in terms of mean responses of some primary study endpoints. The objectives of the intended clinical trials usually include the evaluation of intervention effects, demonstration of therapeutic equivalence or non-inferiority and establishment of superiority. The equations applied in this study (mostly contained in the <mark style="background-color: #CCECFF">**base**</mark> package) attempt to provide calculations for the sample size, critical value and power based on the study objectives and hypotheses of interest. 
+|
 ##  1.1 One-Sample Design
 
 ###  1.1.1 Test for Equality
