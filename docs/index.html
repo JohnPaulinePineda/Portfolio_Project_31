@@ -434,31 +434,39 @@ interest.<br />
 <div id="one-sample-design" class="section level2">
 <h2>1.1 One-Sample Design</h2>
 <div class="line-block"><br />
-One-Sample Design involves individual numeric response values from
-sampled subjects. In clinical research, responses could be the
-difference between matched pairs such as the pre-treatment and
-post-treatment responses or changes from baseline to endpoint within a
-treatment group. Responses are assumed to be independent and identically
-distributed normal random variables with zero mean and a given variance.
-Parameters needed for the computations are as follows:<br />
+<a href="https://www.taylorfrancis.com/books/mono/10.1201/9781315183084/sample-size-calculations-clinical-research-shein-chung-chow-jun-shao-hansheng-wang-yuliya-lokhnygina">One-Sample
+Design</a> involves individual numeric response values from sampled
+subjects. In clinical research, responses could be the difference
+between matched pairs such as the pre-treatment and post-treatment
+responses or changes from baseline to endpoint within a treatment group.
+Responses are assumed to be independent and identically distributed
+normal random variables with zero mean and a given variance. Parameters
+needed for the computations are as follows:<br />
 <br />
-<strong>[A]</strong><span style="color: #FF0000">Mean Response</span>
-:<br />
+<strong>[A]</strong> <span style="color: #FF0000">Mean Response</span> :
+True mean response value obtained from sampled subjects<br />
 <br />
-<strong>[B]</strong><span style="color: #FF0000">Reference</span>
-:<br />
+<strong>[B]</strong> <span style="color: #FF0000">Reference</span> :
+Baseline value for comparison<br />
 <br />
-<strong>[C]</strong><span style="color: #FF0000">Standard
-Deviation</span> :<br />
+<strong>[C]</strong> <span style="color: #FF0000">Standard
+Deviation</span> : Data variability based from literature, pilot studies
+or preliminary experiments<br />
 <br />
-<strong>[D]</strong><span style="color: #FF0000">Alpha</span> : Maximum
-allowed Type I error = 5%.<br />
+<strong>[D]</strong> <span style="color: #FF0000">Alpha</span> : Maximum
+allowed Type I error<br />
 <br />
-<strong>[E]</strong><span style="color: #FF0000">Beta</span> : Maximum
-allowed Type II error = 20% (equivalent to 80% Power).<br />
+<strong>[E]</strong> <span style="color: #FF0000">Beta</span> : Maximum
+allowed Type II error<br />
 <br />
 <strong>[F]</strong> <span style="color: #FF0000">Testing Margin</span>
 :<br />
+     <strong>[F.1]</strong> Minimum margin to establish that the mean
+response is much better than reference<br />
+     <strong>[F.2]</strong> Minimum margin to establish that the mean
+response is not much worse as the reference<br />
+     <strong>[F.3]</strong> Minimum margin to establish that the mean
+response is no better and no worse than the reference<br />
 </div>
 <div id="test-for-equality" class="section level3">
 <h3>1.1.1 Test for Equality</h3>

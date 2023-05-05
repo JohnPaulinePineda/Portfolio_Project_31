@@ -24,19 +24,22 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 |
 ##  1.1 One-Sample Design
 |
-| One-Sample Design involves individual numeric response values from sampled subjects. In clinical research, responses could be the difference between matched pairs such as the pre-treatment and post-treatment responses or changes from baseline to endpoint within a treatment group. Responses are assumed to be independent and identically distributed normal random variables with zero mean and a given variance. Parameters needed for the computations are as follows:
+| [One-Sample Design](https://www.taylorfrancis.com/books/mono/10.1201/9781315183084/sample-size-calculations-clinical-research-shein-chung-chow-jun-shao-hansheng-wang-yuliya-lokhnygina) involves individual numeric response values from sampled subjects. In clinical research, responses could be the difference between matched pairs such as the pre-treatment and post-treatment responses or changes from baseline to endpoint within a treatment group. Responses are assumed to be independent and identically distributed normal random variables with zero mean and a given variance. Parameters needed for the computations are as follows:
 |
-| **[A]**<span style="color: #FF0000">Mean Response</span> :
+| **[A]** <span style="color: #FF0000">Mean Response</span> : True mean response value obtained from sampled subjects 
 |
-| **[B]**<span style="color: #FF0000">Reference</span> : 
+| **[B]** <span style="color: #FF0000">Reference</span> : Baseline value for comparison
 |
-| **[C]**<span style="color: #FF0000">Standard Deviation</span> : 
+| **[C]** <span style="color: #FF0000">Standard Deviation</span> : Data variability based from literature, pilot studies or preliminary experiments
 |
-| **[D]**<span style="color: #FF0000">Alpha</span> : Maximum allowed Type I error = 5%.
+| **[D]** <span style="color: #FF0000">Alpha</span> : Maximum allowed Type I error
 |
-| **[E]**<span style="color: #FF0000">Beta</span> : Maximum allowed Type II error = 20% (equivalent to 80% Power).
+| **[E]** <span style="color: #FF0000">Beta</span> : Maximum allowed Type II error
 |
-| **[F]** <span style="color: #FF0000">Testing Margin</span> :
+| **[F]** <span style="color: #FF0000">Testing Margin</span> : 
+|      **[F.1]** Minimum margin to establish that the mean response is much better than reference
+|      **[F.2]** Minimum margin to establish that the mean response is not much worse as the reference
+|      **[F.3]** Minimum margin to establish that the mean response is no better and no worse than the reference
 |
 ###  1.1.1 Test for Equality
 
