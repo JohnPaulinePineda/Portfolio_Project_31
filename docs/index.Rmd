@@ -47,11 +47,14 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 |
 ###  1.1.1 Test for Equality (OSD_EQUALITY)
 |
-| **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. Given a level of significance of 0.05, evaluate the sample size range to achieve statistical test powers equal to 70%, 80% and 90%.
+| **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For prevention of progression from osteopenia to osteoporosis, the study aims to demonstrate that the mean bone density post-treatment and pre-treatment are different. Given a level of significance of 0.05, evaluate the sample size range for a test of equality to achieve statistical test powers equal to 70%, 80% and 90%.
+
 |
 | **[Null Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density equals 0
 |
 | **[Alternative Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density does not equal 0
+|
+| **[Statistical Decision]** Rejection of the null hypothesis implies difference between the mean bone density values post-treatment and pre-treatment
 |
 | **[A]** <span style="color: #FF0000">Mean Response</span> : 2.0 to 4.0 SD at 0.20 intervals 
 |
@@ -108,24 +111,24 @@ alpha=0.05
 beta=c(0.30,0.20,0.10)
 
 ##################################
-# Computing the range of samples sizes based on different levels Type II errors
+# Computing the range of samples sizes based on different levels of Type II errors
 ##################################
 beta_1=beta[1]
 (n_Beta30=(sd*(qnorm(1-alpha/2)+qnorm(1-beta_1))/(mu_Response-mu_Reference))^2)
 ceiling(n_Beta30)
-z_Beta30=(mu_Response-mu_Reference)/(sd*sqrt(n_Beta30))
+z_Beta30=(mu_Response-mu_Reference)/(sd/sqrt(n_Beta30))
 (Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/2))+pnorm(-z_Beta30-qnorm(1-alpha/2)))
 
 beta_2=beta[2]
 (n_Beta20=(sd*(qnorm(1-alpha/2)+qnorm(1-beta_2))/(mu_Response-mu_Reference))^2)
 ceiling(n_Beta20)
-z_Beta30=(mu_Response-mu_Reference)/(sd*sqrt(n_Beta20))
+z_Beta30=(mu_Response-mu_Reference)/(sd/sqrt(n_Beta20))
 (Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/2))+pnorm(-z_Beta30-qnorm(1-alpha/2)))
 
 beta_3=beta[3]
 (n_Beta10=(sd*(qnorm(1-alpha/2)+qnorm(1-beta_3))/(mu_Response-mu_Reference))^2)
 ceiling(n_Beta10)
-z_Beta30=(mu_Response-mu_Reference)/(sd*sqrt(n_Beta10))
+z_Beta30=(mu_Response-mu_Reference)/(sd/sqrt(n_Beta10))
 (Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/2))+pnorm(-z_Beta30-qnorm(1-alpha/2)))
 
 OneSampleDesign.Equality <- as.data.frame(cbind(mu_Response,n_Beta30,n_Beta20,n_Beta10))
@@ -169,9 +172,118 @@ OneSampleDesign.Equality.Reshaped$Label <- rep("OSD_EQUALITY",nrow(OneSampleDesi
 
 ```
 
-###  1.1.2 Test for Non-Inferiority (OSD_NON-INFERIORITY)
-
+###  1.1.2 Test for Non-Inferiority (OSD_NONINFERIORITY)
+|
+| **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For prevention of progression from osteopenia to osteoporosis, the study aims to demonstrate that the mean bone density post-treatment is no less than pre-treatment by a clinically meaningful difference equal to −0.5 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of non-inferiority to achieve statistical test powers equal to 70%, 80% and 90%.
+|
+| **[Null Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density <= clinically meaningful difference
+|
+| **[Alternative Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density > clinically meaningful difference
+|
+| **[Statistical Decision]** Rejection of the null hypothesis implies non-inferiority of the mean bone density treatment as compared to non-treatment, given the testing margin
+|
+| **[A]** <span style="color: #FF0000">Mean Response</span> : 2.0 to 4.0 SD at 0.20 intervals 
+|
+| **[B]** <span style="color: #FF0000">Reference</span> : 1.5 SD
+|
+| **[C]** <span style="color: #FF0000">Standard Deviation</span> : Not explicitly given but already factored into the mean values and will cancel out during computation
+|
+| **[D]** <span style="color: #FF0000">Alpha</span> : 0.05
+|
+| **[E]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
+|
+| **[F]** <span style="color: #FF0000">Testing Margin</span> : - 5.0 SD for the Test of Non-Inferiority hypothesis
+|
 ```{r section_1.1.2, warning=FALSE, message=FALSE}
+##################################
+# Defining a range of possible hypothesized values for mu
+##################################
+mu_Response=seq(2.0,4.0,0.2)
+
+##################################
+# Defining a fixed hypothesized value for mu_0
+##################################
+mu_Reference=1.5
+
+##################################
+# Defining a fixed hypothesized value for the standard deviation
+##################################
+sd=1
+
+##################################
+# Defining a fixed hypothesized value for the Type I error
+##################################
+alpha=0.05
+
+##################################
+# Defining a range of possible hypothesized values for the Type II error
+##################################
+beta=c(0.30,0.20,0.10)
+
+##################################
+# Defining the non-inferiority testing margin
+##################################
+epsilon=-0.5
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=(sd*(qnorm(1-alpha)+qnorm(1-beta_1))/(mu_Response-mu_Reference-epsilon))^2)
+ceiling(n_Beta30)
+z_Beta30=(mu_Response-mu_Reference-epsilon)/(sd/sqrt(n_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha))+pnorm(-z_Beta30-qnorm(1-alpha)))
+
+beta_2=beta[2]
+(n_Beta20=(sd*(qnorm(1-alpha)+qnorm(1-beta_2))/(mu_Response-mu_Reference-epsilon))^2)
+ceiling(n_Beta20)
+z_Beta20=(mu_Response-mu_Reference-epsilon)/(sd/sqrt(n_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha))+pnorm(-z_Beta20-qnorm(1-alpha)))
+
+beta_3=beta[3]
+(n_Beta10=(sd*(qnorm(1-alpha)+qnorm(1-beta_3))/(mu_Response-mu_Reference-epsilon))^2)
+ceiling(n_Beta10)
+z_Beta10=(mu_Response-mu_Reference-epsilon)/(sd/sqrt(n_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha))+pnorm(-z_Beta10-qnorm(1-alpha)))
+
+OneSampleDesign.NonInferiority <- as.data.frame(cbind(mu_Response,n_Beta30,n_Beta20,n_Beta10))
+names(OneSampleDesign.NonInferiority) <- c("Posttreatment.Mean.Bone.Density",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+OneSampleDesign.NonInferiority.Reshaped <- gather(OneSampleDesign.NonInferiority,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+OneSampleDesign.NonInferiority.Reshaped$Label <- rep("OSD_NONINFERIORITY",nrow(OneSampleDesign.NonInferiority.Reshaped))
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(OneSampleDesign.NonInferiority.PowerAnalysis <- ggplot(OneSampleDesign.NonInferiority.Reshaped,
+                                                      aes(x=Posttreatment.Mean.Bone.Density,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Post-Treatment Mean Bone Density",
+                      limits=c(2,4),
+                      breaks=seq(2,4,
+                                 by=0.2)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,50),
+                     breaks=seq(0,50,by=5)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("One-Sample Design : Test for Non-Inferiority"))
 
 ```
 
@@ -215,8 +327,29 @@ OSD_EQUALITY.PowerAnalysis <- ggplot(OneSampleDesign.Equality.Reshaped,
         axis.title.y=element_text(color="black",face="bold",size=12),
         plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
 
+OSD_NONINFERIORITY.PowerAnalysis <- ggplot(OneSampleDesign.NonInferiority.Reshaped,
+                                     aes(x=Posttreatment.Mean.Bone.Density,
+                                         y=Sample.Size, 
+                                         color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   facet_grid(. ~ Label) +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Post-Treatment Mean Bone Density",
+                      limits=c(2,4),
+                      breaks=seq(2,4,
+                                 by=0.2)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,50),
+                     breaks=seq(0,50,by=5)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
+
 OSD_PowerAnalysis <- ggarrange(OSD_EQUALITY.PowerAnalysis,
-                               OSD_EQUALITY.PowerAnalysis,
+                               OSD_NONINFERIORITY.PowerAnalysis,
                                OSD_EQUALITY.PowerAnalysis,
                                OSD_EQUALITY.PowerAnalysis,
                                ncol=2, nrow=2)
