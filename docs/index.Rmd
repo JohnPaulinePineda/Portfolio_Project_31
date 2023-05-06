@@ -163,16 +163,7 @@ OneSampleDesign.Equality.Reshaped$Label <- rep("OSD_EQUALITY",nrow(OneSampleDesi
                      breaks=seq(0,50,by=5)) +
   theme(axis.title.x=element_text(color="black",face="bold",size=12),
         legend.position="top",
-        legend.key.size = unit(1,"cm"),
-        legend.key.height = unit(1,"cm"), 
-        legend.key.width = unit(1,"cm"),
-        legend.title = element_text(size=12,face="bold"), 
-        legend.text = element_text(size=12,face="bold"),
-        text=element_text(size=12),
-        axis.text.y=element_text(color="black",face="bold",hjust=0.25,size=12),
-        axis.text.x=element_text(color="black",face="bold",size=12),
         axis.title.y=element_text(color="black",face="bold",size=12),
-        axis.ticks.length=unit(0.25,"cm"),
         plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
   ggtitle("One-Sample Design : Test for Equality"))
 
@@ -221,16 +212,7 @@ OSD_EQUALITY.PowerAnalysis <- ggplot(OneSampleDesign.Equality.Reshaped,
                      breaks=seq(0,50,by=5)) +
   theme(axis.title.x=element_text(color="black",face="bold",size=12),
         legend.position="top",
-        legend.key.size = unit(1,"cm"),
-        legend.key.height = unit(1,"cm"), 
-        legend.key.width = unit(1,"cm"),
-        legend.title = element_text(size=12,face="bold"), 
-        legend.text = element_text(size=12,face="bold"),
-        text=element_text(size=12),
-        axis.text.y=element_text(color="black",face="bold",hjust=0.25,size=12),
-        axis.text.x=element_text(color="black",face="bold",size=12),
         axis.title.y=element_text(color="black",face="bold",size=12),
-        axis.ticks.length=unit(0.25,"cm"),
         plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
 
 OSD_PowerAnalysis <- ggarrange(OSD_EQUALITY.PowerAnalysis,
