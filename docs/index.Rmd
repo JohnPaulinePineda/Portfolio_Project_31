@@ -128,8 +128,8 @@ ceiling(n_Beta10)
 z_Beta30=(mu_Response-mu_Reference)/(sd*sqrt(n_Beta10))
 (Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/2))+pnorm(-z_Beta30-qnorm(1-alpha/2)))
 
-SampleSizePowerCurve <- as.data.frame(cbind(mu_Response,n_Beta30,n_Beta20,n_Beta10))
-names(SampleSizePowerCurve) <- c("Posttreatment.Mean.Bone.Density",
+OneSampleDesign.Equality <- as.data.frame(cbind(mu_Response,n_Beta30,n_Beta20,n_Beta10))
+names(OneSampleDesign.Equality) <- c("Posttreatment.Mean.Bone.Density",
                                  "Power=70%",
                                  "Power=80%",
                                  "Power=90%")
@@ -137,14 +137,15 @@ names(SampleSizePowerCurve) <- c("Posttreatment.Mean.Bone.Density",
 ##################################
 # Restructuring the data
 ##################################
-SampleSizePowerCurve.Reshaped <- gather(SampleSizePowerCurve,"Power=70%","Power=80%","Power=90%",
-                                 key="Power", 
-                                 value="Sample.Size")
+OneSampleDesign.Equality.Reshaped <- gather(OneSampleDesign.Equality,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
 
 ##################################
 # Plotting the sample sizes and power curves
 ##################################
-(PosttreatmentMeanBoneDensity.PowerAnalysis <- ggplot(SampleSizePowerCurve.Reshaped,
+(OneSampleDesign.Equality.PowerAnalysis <- ggplot(OneSampleDesign.Equality.Reshaped,
                                                       aes(x=Posttreatment.Mean.Bone.Density,
                                                           y=Sample.Size, 
                                                           color=Power)) +
