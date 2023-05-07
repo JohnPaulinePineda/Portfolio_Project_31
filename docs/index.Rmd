@@ -162,8 +162,8 @@ OneSampleDesign.Equality.Reshaped$Label <- rep("OSD_EQUALITY",nrow(OneSampleDesi
                       breaks=seq(2,4,
                                  by=0.2)) +
   scale_y_continuous(name="Treatment Group Sample Size",
-                     limits=c(0,60),
-                     breaks=seq(0,60,by=5)) +
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
   theme(axis.title.x=element_text(color="black",face="bold",size=12),
         legend.position="top",
         axis.title.y=element_text(color="black",face="bold",size=12),
@@ -277,8 +277,8 @@ OneSampleDesign.NonInferiority.Reshaped$Label <- rep("OSD_NONINFERIORITY",nrow(O
                       breaks=seq(2,4,
                                  by=0.2)) +
   scale_y_continuous(name="Treatment Group Sample Size",
-                     limits=c(0,60),
-                     breaks=seq(0,60,by=5)) +
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
   theme(axis.title.x=element_text(color="black",face="bold",size=12),
         legend.position="top",
         axis.title.y=element_text(color="black",face="bold",size=12),
@@ -392,8 +392,8 @@ OneSampleDesign.Superiority.Reshaped$Label <- rep("OSD_SUPERIORITY",nrow(OneSamp
                       breaks=seq(2,4,
                                  by=0.2)) +
   scale_y_continuous(name="Treatment Group Sample Size",
-                     limits=c(0,60),
-                     breaks=seq(0,60,by=5)) +
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
   theme(axis.title.x=element_text(color="black",face="bold",size=12),
         legend.position="top",
         axis.title.y=element_text(color="black",face="bold",size=12),
@@ -404,7 +404,7 @@ OneSampleDesign.Superiority.Reshaped$Label <- rep("OSD_SUPERIORITY",nrow(OneSamp
 
 ###  1.1.4 Test for Equivalence (OSD_EQUIVALENCE)
 |
-| **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For a special investigation, the study aims to demonstrate that the mean bone density post-treatment is not much worse or better than pre-treatment by a clinically meaningful difference equal to +0.20 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of non-inferiority to achieve statistical test powers equal to 70%, 80% and 90%.
+| **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For a special investigation, the study aims to demonstrate that the mean bone density post-treatment is not much worse or better than pre-treatment by a clinically meaningful difference equal to +0.10 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of non-inferiority to achieve statistical test powers equal to 70%, 80% and 90%.
 |
 | **[Null Hypothesis]** Absolute value of (Post-treatment mean bone density - Post-treatment mean bone density) >= Clinically meaningful difference
 |
@@ -422,7 +422,7 @@ OneSampleDesign.Superiority.Reshaped$Label <- rep("OSD_SUPERIORITY",nrow(OneSamp
 |
 | **[E]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
 |
-| **[F]** <span style="color: #FF0000">Testing Margin</span> : +0.25 SD for the Test of Superiority hypothesis
+| **[F]** <span style="color: #FF0000">Testing Margin</span> : +0.10 SD for the Test of Superiority hypothesis
 |
 ```{r section_1.1.4, warning=FALSE, message=FALSE}
 ##################################
@@ -469,6 +469,7 @@ beta_2=beta[2]
 ceiling(n_Beta20)
 z_Beta20=(abs(mu_Response-mu_Reference)-epsilon)/(sd/sqrt(n_Beta20))
 (Power_Beta20=2*(pnorm(z_Beta20-qnorm(1-alpha))+pnorm(-z_Beta20-qnorm(1-alpha)))-1)
+(Power_Beta20=2*(pnorm(z_Beta20-qnorm(alpha)))-1)
 
 beta_3=beta[3]
 (n_Beta10=(sd*(qnorm(1-alpha)+qnorm(1-beta_3/2))/(epsilon-abs(mu_Response-mu_Reference)))^2)
@@ -507,8 +508,8 @@ OneSampleDesign.Equivalence.Reshaped$Label <- rep("OSD_EQUIVALENCE",nrow(OneSamp
                       breaks=seq(2,4,
                                  by=0.2)) +
   scale_y_continuous(name="Treatment Group Sample Size",
-                     limits=c(0,60),
-                     breaks=seq(0,60,by=5)) +
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
   theme(axis.title.x=element_text(color="black",face="bold",size=12),
         legend.position="top",
         axis.title.y=element_text(color="black",face="bold",size=12),
@@ -538,8 +539,8 @@ OSD_EQUALITY.PowerAnalysis <- ggplot(OneSampleDesign.Equality.Reshaped,
                       breaks=seq(2,4,
                                  by=0.2)) +
   scale_y_continuous(name="Treatment Group Sample Size",
-                     limits=c(0,60),
-                     breaks=seq(0,60,by=5)) +
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
   theme(axis.title.x=element_text(color="black",face="bold",size=12),
         legend.position="top",
         axis.title.y=element_text(color="black",face="bold",size=12),
@@ -559,8 +560,8 @@ OSD_NONINFERIORITY.PowerAnalysis <- ggplot(OneSampleDesign.NonInferiority.Reshap
                       breaks=seq(2,4,
                                  by=0.2)) +
   scale_y_continuous(name="Treatment Group Sample Size",
-                     limits=c(0,60),
-                     breaks=seq(0,60,by=5)) +
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
   theme(axis.title.x=element_text(color="black",face="bold",size=12),
         legend.position="top",
         axis.title.y=element_text(color="black",face="bold",size=12),
@@ -580,8 +581,29 @@ OSD_SUPERIORITY.PowerAnalysis <- ggplot(OneSampleDesign.Superiority.Reshaped,
                       breaks=seq(2,4,
                                  by=0.2)) +
   scale_y_continuous(name="Treatment Group Sample Size",
-                     limits=c(0,60),
-                     breaks=seq(0,60,by=5)) +
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
+
+OSD_EQUIVALENCE.PowerAnalysis <- ggplot(OneSampleDesign.Equivalence.Reshaped,
+                                     aes(x=Posttreatment.Mean.Bone.Density,
+                                         y=Sample.Size, 
+                                         color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   facet_grid(. ~ Label) +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Post-Treatment Mean Bone Density",
+                      limits=c(2,4),
+                      breaks=seq(2,4,
+                                 by=0.2)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
   theme(axis.title.x=element_text(color="black",face="bold",size=12),
         legend.position="top",
         axis.title.y=element_text(color="black",face="bold",size=12),
@@ -590,7 +612,7 @@ OSD_SUPERIORITY.PowerAnalysis <- ggplot(OneSampleDesign.Superiority.Reshaped,
 OSD_PowerAnalysis <- ggarrange(OSD_EQUALITY.PowerAnalysis,
                                OSD_NONINFERIORITY.PowerAnalysis,
                                OSD_SUPERIORITY.PowerAnalysis,
-                               OSD_EQUALITY.PowerAnalysis,
+                               OSD_EQUIVALENCE.PowerAnalysis,
                                ncol=2, nrow=2)
 
 annotate_figure(OSD_PowerAnalysis,
@@ -601,97 +623,29 @@ annotate_figure(OSD_PowerAnalysis,
 
 ```
 
-##  1.2 Two-Sample Parallel Design
+##  1.2 Two-Sample Design (TSD)
 
-###  1.2.1 Test for Equality
+###  1.2.1 Test for Equality (TSD_EQUALITY)
 
-```{r section_1.2.1, warning=FALSE, message=FALSE}
+###  1.2.2 Test for Non-Inferiority (TSD_NONINFERIORITY)
 
-```
+###  1.2.3 Test for Superiority (TSD_SUPERIORITY)
 
-###  1.2.2 Test for Non-Inferiority
+###  1.2.4 Test for Equivalence (TSD_EQUIVALENCE)
 
-```{r section_1.2.2, warning=FALSE, message=FALSE}
+###  1.2.5 Evaluation Summary
 
-```
+##  1.3 K-Sample Design (KSD)
 
-###  1.2.3 Test for Superiority
+###  1.3.1 Test for Equality (KSD_EQUALITY)
 
-```{r section_1.2.3, warning=FALSE, message=FALSE}
+###  1.3.2 Test for Non-Inferiority (KSD_NONINFERIORITY)
 
-```
+###  1.3.3 Test for Superiority (KSD_SUPERIORITY)
 
-###  1.2.4 Test for Equivalence
+###  1.3.4 Test for Equivalence (KSD_EQUIVALENCE)
 
-```{r section_1.2.4, warning=FALSE, message=FALSE}
-
-```
-
-##  1.3 Two-Sample Crossover Design
-
-###  1.3.1 Test for Equality
-
-```{r section_1.3.1, warning=FALSE, message=FALSE}
-
-```
-
-###  1.3.2 Test for Non-Inferiority
-
-```{r section_1.3.2, warning=FALSE, message=FALSE}
-
-```
-
-###  1.3.3 Test for Superiority
-
-```{r section_1.3.3, warning=FALSE, message=FALSE}
-
-```
-
-###  1.3.4 Test for Equivalence
-
-```{r section_1.3.4, warning=FALSE, message=FALSE}
-
-```
-
-##  1.4 Multiple-Sample One-Way ANOVA Design
-
-###  1.4.1 Pairwise Comparison
-
-```{r section_1.4.1, warning=FALSE, message=FALSE}
-
-```
-
-###  1.4.2 Simultaneous Comparison
-
-```{r section_1.4.2, warning=FALSE, message=FALSE}
-
-```
-
-##  1.5 Multiple-Sample Williams Design
-
-###  1.5.1 Test for Equality
-
-```{r section_1.5.1, warning=FALSE, message=FALSE}
-
-```
-
-###  1.5.2 Test for Non-Inferiority
-
-```{r section_1.5.2, warning=FALSE, message=FALSE}
-
-```
-
-###  1.5.3 Test for Superiority
-
-```{r section_1.5.3, warning=FALSE, message=FALSE}
-
-```
-
-###  1.5.4 Test for Equivalence
-
-```{r section_1.5.4, warning=FALSE, message=FALSE}
-
-```
+###  1.3.5 Evaluation Summary
 
 # **2. References**
 |
