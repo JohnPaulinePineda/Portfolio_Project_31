@@ -53,7 +53,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 |
 | **[Alternative Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density does not equal 0
 |
-| **[Statistical Decision]** Rejection of the null hypothesis implies difference between the mean bone density values post-treatment and pre-treatment
+| **[Hypothesis Test]** Rejection of the null hypothesis implies difference between the mean bone density values post-treatment and pre-treatment
 |
 | **[A]** <span style="color: #FF0000">Mean Response</span> : 2.0 to 4.0 SD at 0.20 intervals 
 |
@@ -181,7 +181,7 @@ OneSampleDesign.Equality.Reshaped
 |
 | **[Alternative Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density > Clinically meaningful difference
 |
-| **[Statistical Decision]** Rejection of the null hypothesis implies non-inferiority of the mean bone density treatment as compared to non-treatment, given the delta
+| **[Hypothesis Test]** Rejection of the null hypothesis implies non-inferiority of the mean bone density treatment as compared to non-treatment, given the delta
 |
 | **[A]** <span style="color: #FF0000">Mean Response</span> : 2.0 to 4.0 SD at 0.20 intervals 
 |
@@ -298,7 +298,7 @@ OneSampleDesign.NonInferiority.Reshaped
 |
 | **[Alternative Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density > Clinically meaningful difference
 |
-| **[Statistical Decision]** Rejection of the null hypothesis implies non-inferiority of the mean bone density treatment as compared to non-treatment, given the delta
+| **[Hypothesis Test]** Rejection of the null hypothesis implies non-inferiority of the mean bone density treatment as compared to non-treatment, given the delta
 |
 | **[A]** <span style="color: #FF0000">Mean Response</span> : 2.0 to 4.0 SD at 0.20 intervals 
 |
@@ -415,7 +415,7 @@ OneSampleDesign.Superiority.Reshaped
 |
 | **[Alternative Hypothesis]** Absolute value of (Post-treatment mean bone density - Post-treatment) mean bone density < Clinically meaningful difference
 |
-| **[Statistical Decision]** Rejection of the null hypothesis implies equivalence of the mean bone density treatment as compared to non-treatment, given the delta
+| **[Hypothesis Test]** Rejection of the null hypothesis implies equivalence of the mean bone density treatment as compared to non-treatment, given the delta
 |
 | **[A]** <span style="color: #FF0000">Mean Response</span> : 2.0 to 4.0 SD at 0.20 intervals 
 |
@@ -632,7 +632,7 @@ annotate_figure(OSD_PowerAnalysis,
 
 ##  1.2 Two-Sample Design (TSD)
 |
-| [Two-Sample Design](https://www.taylorfrancis.com/books/mono/10.1201/9781315183084/sample-size-calculations-clinical-research-shein-chung-chow-jun-shao-hansheng-wang-yuliya-lokhnygina) involves individual numeric response values from sampled subjects in between treatment and control groups, or between two competing groups. In clinical research, responses could be between a test drug and a placebo control or an active control agent; or between two competing agents. Responses are assumed to be independent normal random variables with zero mean and a given pooled variance. Parameters needed for the computations are as follows:
+| [Two-Sample Design](https://www.taylorfrancis.com/books/mono/10.1201/9781315183084/sample-size-calculations-clinical-research-shein-chung-chow-jun-shao-hansheng-wang-yuliya-lokhnygina) involves individual numeric response values from sampled subjects between treatment and control groups, or between two competing groups. In clinical research, responses could be between a test drug and a placebo control or an active control agent; or between two competing agents. Responses are assumed to be independent normal random variables with zero mean and a given pooled variance. Parameters needed for the computations are as follows:
 |
 | **[A]** <span style="color: #FF0000">Mean Treatment Response</span> : True mean response value obtained from sampled subjects in the treatment group
 |
@@ -649,9 +649,9 @@ annotate_figure(OSD_PowerAnalysis,
 | **[G]** <span style="color: #FF0000">Kappa</span> : Matching ratio between the Treatment and Control groups
 |
 | **[H]** <span style="color: #FF0000">Delta</span> : 
-|      **[H.1]** Minimum testing margin to establish that the mean response is much better than reference
-|      **[H.2]** Minimum testing margin to establish that the mean response is not much worse as the reference
-|      **[H.3]** Minimum testing margin to establish that the mean response is no better and no worse than the reference
+|      **[H.1]** Minimum testing margin to establish that the mean treatment response is much better than control
+|      **[H.2]** Minimum testing margin to establish that the mean treatment response is much better than control
+|      **[H.3]** Minimum testing margin to establish that the mean treatment response is much better than control
 |
 | A case scenario was provided as follows to demonstrate sample size computation and power analysis applying the different types of hypotheses:
 |
@@ -659,15 +659,15 @@ annotate_figure(OSD_PowerAnalysis,
 |
 ###  1.2.1 Test for Equality (TSD_EQUALITY)
 |
-| **[Research Question]** Suppose that a difference of 5 to 12% in percent change of LDL is considered clinically meaningful difference. The study aims to demonstrate that the mean LDL percent change between the two cholesterol lowering agents are different. Given a level of significance of 0.05, standard deviation of 10% and matching ratio between both groups equal to 1, evaluate the sample size range for a test of equality to achieve statistical test powers equal to 70%, 80% and 90%.
+| **[Research Question]** Suppose that a difference of 6 to 12% in percent change of LDL is hypothesized between two cholesterol lowering agents. The study aims to demonstrate that the mean LDL percent change between the two cholesterol lowering agents are different. Given a level of significance of 0.05, standard deviation of 10% and matching ratio between both groups equal to 1, evaluate the sample size range for a test of equality to achieve statistical test powers equal to 70%, 80% and 90%.
 |
 | **[Null Hypothesis]** Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent change equals 0
 |
 | **[Alternative Hypothesis]** Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent does not equal 0
 |
-| **[Statistical Decision]** Rejection of the null hypothesis implies difference between the mean LDL percent change between both lowering agents
+| **[Hypothesis Test]** Rejection of the null hypothesis implies difference between the mean LDL percent change between both lowering agents
 |
-| **[A]** <span style="color: #FF0000">Epsilon</span> : 5 to 12% at 1% intervals
+| **[A]** <span style="color: #FF0000">Epsilon</span> : 6 to 12% at 1% intervals
 |
 | **[B]** <span style="color: #FF0000">Standard Deviation</span> : 10%
 |
@@ -684,7 +684,7 @@ annotate_figure(OSD_PowerAnalysis,
 ##################################
 # Defining a range of possible hypothesized values for epsilon
 ##################################
-epsilon=seq(5,12,1)
+epsilon=seq(6,12,1)
 
 ##################################
 # Defining a fixed hypothesized value for the standard deviation
@@ -756,9 +756,8 @@ TwoSampleDesign.Equality.Reshaped
    theme_bw() +
    scale_color_brewer(palette="Paired") +
    scale_x_continuous(name="Hypothesized Mean LDL Percent Change",
-                      limits=c(5,12),
-                      breaks=seq(5,12,
-                                 by=1)) +
+                      limits=c(6,12),
+                      breaks=seq(6,12,by=1)) +
   scale_y_continuous(name="Sample Size Per Group",
                      limits=c(0,100),
                      breaks=seq(0,100,by=10)) +
@@ -772,15 +771,15 @@ TwoSampleDesign.Equality.Reshaped
 
 ###  1.2.2 Test for Non-Inferiority (TSD_NONINFERIORITY)
 |
-| **[Research Question]** Suppose that a difference of 5 to 12% in percent change of LDL is considered clinically meaningful difference. The study aims to demonstrate that the mean LDL percent change for the first cholesterol lowering agent is not much worse than the second cholesterol lowering agent. Given a level of significance of 0.05, standard deviation of 10% and matching ratio between both groups equal to 1, evaluate the sample size range for a test of non-inferiority to achieve statistical test powers equal to 70%, 80% and 90%.
+| **[Research Question]** Suppose that a difference of 6 to 12% in percent change of LDL is hypothesized between two cholesterol lowering agents. The study aims to demonstrate that the mean LDL percent change for the first cholesterol lowering agent is not much worse than the second cholesterol lowering agent by a clinically meaningful difference equal to −5. Given a level of significance of 0.05, standard deviation of 10% and matching ratio between both groups equal to 1, evaluate the sample size range for a test of non-inferiority to achieve statistical test powers equal to 70%, 80% and 90%.
 |
 | **[Null Hypothesis]** Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent change <= Clinically meaningful difference
 |
 | **[Alternative Hypothesis]** Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent > Clinically meaningful difference
 |
-| **[Statistical Decision]** Rejection of the null hypothesis implies non-inferiority of the Lowering agent 1 mean LDL percent change as compared to Lowering agent 1, given the testing margin
+| **[Hypothesis Test]** Rejection of the null hypothesis implies non-inferiority of the Lowering agent 1 mean LDL percent change as compared to Lowering agent 1, given the testing margin
 |
-| **[A]** <span style="color: #FF0000">Epsilon</span> : 5 to 12% at 1% intervals
+| **[A]** <span style="color: #FF0000">Epsilon</span> : 6 to 12% at 1% intervals
 |
 | **[B]** <span style="color: #FF0000">Standard Deviation</span> : 10%
 |
@@ -797,7 +796,7 @@ TwoSampleDesign.Equality.Reshaped
 ##################################
 # Defining a range of possible hypothesized values for epsilon
 ##################################
-epsilon=seq(5,12,1)
+epsilon=seq(6,12,1)
 
 ##################################
 # Defining a fixed hypothesized value for the standard deviation
@@ -874,9 +873,8 @@ TwoSampleDesign.NonInferiority.Reshaped
    theme_bw() +
    scale_color_brewer(palette="Paired") +
    scale_x_continuous(name="Hypothesized Mean LDL Percent Change",
-                      limits=c(5,12),
-                      breaks=seq(5,12,
-                                 by=1)) +
+                      limits=c(6,12),
+                      breaks=seq(6,12,by=1)) +
   scale_y_continuous(name="Sample Size Per Group",
                      limits=c(0,100),
                      breaks=seq(0,100,by=10)) +
@@ -887,7 +885,123 @@ TwoSampleDesign.NonInferiority.Reshaped
   ggtitle("Two-Sample Design : Test for Non-Inferiority"))
 
 ```
+
 ###  1.2.3 Test for Superiority (TSD_SUPERIORITY)
+|
+| **[Research Question]** Suppose that a difference of 6 to 12% in percent change of LDL is hypothesized between two cholesterol lowering agents. The study aims to demonstrate that the mean LDL percent change for the first cholesterol lowering agent is much better than the second cholesterol lowering agent by a clinically meaningful difference equal to +5. Given a level of significance of 0.05, standard deviation of 10% and matching ratio between both groups equal to 1, evaluate the sample size range for a test of superiority to achieve statistical test powers equal to 70%, 80% and 90%.
+|
+| **[Null Hypothesis]** Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent change <= Clinically meaningful difference
+|
+| **[Alternative Hypothesis]** Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent > Clinically meaningful difference
+|
+| **[Hypothesis Test]** Rejection of the null hypothesis implies superiority of the Lowering agent 1 mean LDL percent change as compared to Lowering agent 1, given the testing margin
+|
+| **[A]** <span style="color: #FF0000">Epsilon</span> : 6 to 12% at 1% intervals
+|
+| **[B]** <span style="color: #FF0000">Standard Deviation</span> : 10%
+|
+| **[C]** <span style="color: #FF0000">Alpha</span> : 0.05
+|
+| **[D]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
+|
+| **[E]** <span style="color: #FF0000">Kappa</span> : 1.0
+|
+| **[F]** <span style="color: #FF0000">Delta</span> : +1 testing margin for the Test of Superiority hypothesis
+|
+```{r section_1.2.3, warning=FALSE, message=FALSE}
+
+##################################
+# Defining a range of possible hypothesized values for epsilon
+##################################
+epsilon=seq(6,12,1)
+
+##################################
+# Defining a fixed hypothesized value for the standard deviation
+##################################
+sd=10
+
+##################################
+# Defining a fixed hypothesized value for the Type I error
+##################################
+alpha=0.05
+
+##################################
+# Defining a range of possible hypothesized values for the Type II error
+##################################
+beta=c(0.30,0.20,0.10)
+
+##################################
+# Defining a fixed hypothesized value for kappa
+##################################
+kappa=1.0
+
+##################################
+# Defining the superiority delta
+##################################
+delta=1
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=(1+1/kappa)*(sd*(qnorm(1-alpha)+qnorm(1-beta_1))/(epsilon-delta))^2)
+ceiling(n_Beta30)
+z_Beta30=(epsilon-delta)/(sd*sqrt((1+1/kappa)/n_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha))+pnorm(-z_Beta30-qnorm(1-alpha)))
+
+beta_2=beta[2]
+(n_Beta20=(1+1/kappa)*(sd*(qnorm(1-alpha)+qnorm(1-beta_2))/(epsilon-delta))^2)
+ceiling(n_Beta20)
+z_Beta20=(epsilon-delta)/(sd*sqrt((1+1/kappa)/n_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha))+pnorm(-z_Beta20-qnorm(1-alpha)))
+
+beta_3=beta[3]
+(n_Beta10=(1+1/kappa)*(sd*(qnorm(1-alpha)+qnorm(1-beta_3))/(epsilon-delta))^2)
+ceiling(n_Beta10)
+z_Beta10=(epsilon-delta)/(sd*sqrt((1+1/kappa)/n_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha))+pnorm(-z_Beta10-qnorm(1-alpha)))
+
+TwoSampleDesign.Superiority <- as.data.frame(cbind(epsilon,n_Beta30,n_Beta20,n_Beta10))
+names(TwoSampleDesign.Superiority) <- c("Mean.LDL.Percent.Change",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+TwoSampleDesign.Superiority.Reshaped <- gather(TwoSampleDesign.Superiority,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+TwoSampleDesign.Superiority.Reshaped$Label <- rep("OSD_SUPERIORITY",nrow(TwoSampleDesign.Superiority.Reshaped))
+
+TwoSampleDesign.Superiority.Reshaped
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(TwoSampleDesign.Superiority.PowerAnalysis <-ggplot(TwoSampleDesign.Superiority.Reshaped,
+                                                      aes(x=Mean.LDL.Percent.Change,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Mean LDL Percent Change",
+                      limits=c(6,12),
+                      breaks=seq(6,12,by=1)) +
+  scale_y_continuous(name="Sample Size Per Group",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("Two-Sample Design : Test for Superiority"))
+
+```
 
 ###  1.2.4 Test for Equivalence (TSD_EQUIVALENCE)
 
