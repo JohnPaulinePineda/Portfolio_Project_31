@@ -289,7 +289,7 @@ OneSampleDesign.NonInferiority.Reshaped$Label <- rep("OSD_NONINFERIORITY",nrow(O
 
 ###  1.1.3 Test for Superiority (OSD_SUPERIORITY)
 |
-| **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For prevention of progression from osteopenia to osteoporosis, the study aims to demonstrate that the mean bone density post-treatment is much better than pre-treatment by a clinically meaningful difference equal to +0.25 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of superiority to achieve statistical test powers equal to 70%, 80% and 90%.
+| **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For prevention of progression from osteopenia to osteoporosis, the study aims to demonstrate that the mean bone density post-treatment is much better than pre-treatment by a clinically meaningful difference equal to +0.10 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of superiority to achieve statistical test powers equal to 70%, 80% and 90%.
 |
 | **[Null Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density <= Clinically meaningful difference
 |
@@ -307,7 +307,7 @@ OneSampleDesign.NonInferiority.Reshaped$Label <- rep("OSD_NONINFERIORITY",nrow(O
 |
 | **[E]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
 |
-| **[F]** <span style="color: #FF0000">Testing Margin</span> : +0.25 SD for the Test of Superiority hypothesis
+| **[F]** <span style="color: #FF0000">Testing Margin</span> : +0.10 SD for the Test of Superiority hypothesis
 |
 ```{r section_1.1.3, warning=FALSE, message=FALSE}
 ##################################
@@ -336,7 +336,7 @@ alpha=0.05
 beta=c(0.30,0.20,0.10)
 
 ##################################
-# Defining the non-inferiority testing margin
+# Defining the superiority testing margin
 ##################################
 epsilon= 0.10
 
@@ -404,13 +404,13 @@ OneSampleDesign.Superiority.Reshaped$Label <- rep("OSD_SUPERIORITY",nrow(OneSamp
 
 ###  1.1.4 Test for Equivalence (OSD_EQUIVALENCE)
 |
-| **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For prevention of progression from osteopenia to osteoporosis, the study aims to demonstrate that the mean bone density post-treatment is not much worse or better than pre-treatment by a clinically meaningful difference equal to +0.25 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of non-inferiority to achieve statistical test powers equal to 70%, 80% and 90%.
+| **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For a special investigation, the study aims to demonstrate that the mean bone density post-treatment is not much worse or better than pre-treatment by a clinically meaningful difference equal to +0.20 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of non-inferiority to achieve statistical test powers equal to 70%, 80% and 90%.
 |
-| **[Null Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density <= Clinically meaningful difference
+| **[Null Hypothesis]** Absolute value of (Post-treatment mean bone density - Post-treatment mean bone density) >= Clinically meaningful difference
 |
-| **[Alternative Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density > Clinically meaningful difference
+| **[Alternative Hypothesis]** Absolute value of (Post-treatment mean bone density - Post-treatment) mean bone density < Clinically meaningful difference
 |
-| **[Statistical Decision]** Rejection of the null hypothesis implies non-inferiority of the mean bone density treatment as compared to non-treatment, given the testing margin
+| **[Statistical Decision]** Rejection of the null hypothesis implies equivalence of the mean bone density treatment as compared to non-treatment, given the testing margin
 |
 | **[A]** <span style="color: #FF0000">Mean Response</span> : 2.0 to 4.0 SD at 0.20 intervals 
 |
@@ -425,6 +425,95 @@ OneSampleDesign.Superiority.Reshaped$Label <- rep("OSD_SUPERIORITY",nrow(OneSamp
 | **[F]** <span style="color: #FF0000">Testing Margin</span> : +0.25 SD for the Test of Superiority hypothesis
 |
 ```{r section_1.1.4, warning=FALSE, message=FALSE}
+##################################
+# Defining a range of possible hypothesized values for mu
+##################################
+mu_Response=seq(2.0,4.0,0.2)
+
+##################################
+# Defining a fixed hypothesized value for mu_0
+##################################
+mu_Reference=1.5
+
+##################################
+# Defining a fixed hypothesized value for the standard deviation
+##################################
+sd=1
+
+##################################
+# Defining a fixed hypothesized value for the Type I error
+##################################
+alpha=0.05
+
+##################################
+# Defining a range of possible hypothesized values for the Type II error
+##################################
+beta=c(0.30,0.20,0.10)
+
+##################################
+# Defining the equivalence testing margin
+##################################
+epsilon= 0.10
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=(sd*(qnorm(1-alpha)+qnorm(1-beta_1/2))/(epsilon-abs(mu_Response-mu_Reference)))^2)
+ceiling(n_Beta30)
+z_Beta30=(abs(mu_Response-mu_Reference)-epsilon)/(sd/sqrt(n_Beta30))
+(Power_Beta30=2*(pnorm(z_Beta30-qnorm(1-alpha))+pnorm(-z_Beta30-qnorm(1-alpha)))-1)
+
+beta_2=beta[2]
+(n_Beta20=(sd*(qnorm(1-alpha)+qnorm(1-beta_2/2))/(epsilon-abs(mu_Response-mu_Reference)))^2)
+ceiling(n_Beta20)
+z_Beta20=(abs(mu_Response-mu_Reference)-epsilon)/(sd/sqrt(n_Beta20))
+(Power_Beta20=2*(pnorm(z_Beta20-qnorm(1-alpha))+pnorm(-z_Beta20-qnorm(1-alpha)))-1)
+
+beta_3=beta[3]
+(n_Beta10=(sd*(qnorm(1-alpha)+qnorm(1-beta_3/2))/(epsilon-abs(mu_Response-mu_Reference)))^2)
+ceiling(n_Beta10)
+z_Beta10=(abs(mu_Response-mu_Reference)-epsilon)/(sd/sqrt(n_Beta10))
+(Power_Beta10=2*(pnorm(z_Beta10-qnorm(1-alpha))+pnorm(-z_Beta10-qnorm(1-alpha)))-1)
+
+OneSampleDesign.Equivalence <- as.data.frame(cbind(mu_Response,n_Beta30,n_Beta20,n_Beta10))
+names(OneSampleDesign.Equivalence) <- c("Posttreatment.Mean.Bone.Density",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+OneSampleDesign.Equivalence.Reshaped <- gather(OneSampleDesign.Equivalence,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+OneSampleDesign.Equivalence.Reshaped$Label <- rep("OSD_EQUIVALENCE",nrow(OneSampleDesign.Equivalence.Reshaped))
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(OneSampleDesign.Equivalence.PowerAnalysis <- ggplot(OneSampleDesign.Equivalence.Reshaped,
+                                                      aes(x=Posttreatment.Mean.Bone.Density,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Post-Treatment Mean Bone Density",
+                      limits=c(2,4),
+                      breaks=seq(2,4,
+                                 by=0.2)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,60),
+                     breaks=seq(0,60,by=5)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("One-Sample Design : Test for Equivalence"))
 
 ```
 
