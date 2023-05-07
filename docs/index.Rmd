@@ -531,11 +531,12 @@ OneSampleDesign.Equivalence.Reshaped
 |
 | **[A]** The minimum sample size required for the treatment group in a One-Sample Design study is dependent upon the following factors defined and hypothesized prior to the clinical research:
 |      **[A.1]** Study Hypothesis (Equality, Non-Inferiority, Superiority, Equivalence)
-|      **[A.2]** Level of significance (Alpha)
-|      **[A.3]** Power of the test (Beta)
-|      **[A.4]** Epsilon (Difference between Mean Response and Reference)
-|      **[A.5]** Delta (Testing margin, as applicable)
-| **[B]** Given the level of significance = 5% and mean bone density values before treatment = 1.5 SD and after treatment = 2.0 to 4.0 SD representing epsilon values = 0.5 to 2.5, the range of sample sizes is given on the respective power analyses provided for each study hypotheses -
+|      **[A.2]** Level of significance (Alpha) : Lower value increases sample size
+|      **[A.3]** Power of the test (Beta) : Higher value increases sample size
+|      **[A.4]** Data variability (Standard Deviation) : Higher value increases sample size
+|      **[A.5]** Epsilon (Difference between Mean Response and Reference) : Higher value increases sample size
+|      **[A.6]** Delta (Testing margin, as applicable) : Higher value increases sample size
+| **[B]** Given the level of significance = 5%, standard deviation = 1 and mean bone density values before treatment = 1.5 SD and after treatment = 2.0 to 4.0 SD representing epsilon values = 0.5 to 2.5, the range of sample sizes is given on the respective power analyses provided for each study hypotheses -
 |      **[B.1]** OSD_EQUALITY : 
 |             **[B.1.1]** For 70% power, sample size = 1 to 25 
 |             **[B.1.2]** For 80% power, sample size = 2 to 32 
@@ -1144,7 +1145,34 @@ TwoSampleDesign.Equivalence.Reshaped
 ```
 
 ###  1.2.5 Evaluation Summary
-
+|
+| Sample computation and power analysis comparison:
+|
+| **[A]** The minimum sample size required for each treatment group in a Two-Sample Design study is dependent upon the following factors defined and hypothesized prior to the clinical research:
+|      **[A.1]** Study Hypothesis (Equality, Non-Inferiority, Superiority, Equivalence)
+|      **[A.2]** Level of significance (Alpha)
+|      **[A.3]** Power of the test (Beta)
+|      **[A.4]** Data variability (Standard Deviation)
+|      **[A.5]** Epsilon (Difference between Mean Response and Reference)
+|      **[A.6]** Delta (Testing margin, as applicable)
+| **[B]** Given the level of significance = 5% and mean bone density values before treatment = 1.5 SD and after treatment = 2.0 to 4.0 SD representing epsilon values = 0.5 to 2.5, the range of sample sizes is given on the respective power analyses provided for each study hypotheses -
+|      **[B.1]** OSD_EQUALITY : 
+|             **[B.1.1]** For 70% power, sample size = 1 to 25 
+|             **[B.1.2]** For 80% power, sample size = 2 to 32 
+|             **[B.1.3]** For 90% power, sample size = 2 to 43 
+|      **[B.2]** OSD_NONINFERIORITY with Delta = -0.50 SD : 
+|             **[B.2.1]** For 70% power, sample size = 1 to 5 
+|             **[B.2.2]** For 80% power, sample size = 1 to 7 
+|             **[B.2.3]** For 90% power, sample size = 1 to 9 
+|      **[B.3]** OSD_SUPERIORITY with Delta = +0.10 SD :  
+|             **[B.3.1]** For 70% power, sample size = 1 to 30 
+|             **[B.3.2]** For 80% power, sample size = 2 to 39 
+|             **[B.3.3]** For 90% power, sample size = 2 to 54 
+|      **[B.4]** OSD_EQUIVALENCE with Delta = +0.10 SD: 
+|             **[B.4.1]** For 70% power, sample size = 2 to 45 
+|             **[B.4.2]** For 80% power, sample size = 2 to 54 
+|             **[B.4.3]** For 90% power, sample size = 2 to 68 
+|
 ```{r section_1.2.5, warning=FALSE, message=FALSE}
 
 ##################################
@@ -1244,17 +1272,11 @@ annotate_figure(TSD_PowerAnalysis,
 
 ```
 
-##  1.3 K-Sample Design (KSD)
+##  1.3 K-Sample Design One-Way ANOVA Pairwise (KSDOWAP)
 
-###  1.3.1 Test for Equality (KSD_EQUALITY)
+###  1.3.1 Test for Equality (KSDOWAP_EQUALITY)
 
-###  1.3.2 Test for Non-Inferiority (KSD_NONINFERIORITY)
-
-###  1.3.3 Test for Superiority (KSD_SUPERIORITY)
-
-###  1.3.4 Test for Equivalence (KSD_EQUIVALENCE)
-
-###  1.3.5 Evaluation Summary
+###  1.3.2 Evaluation Summary
 
 # **2. References**
 |
