@@ -48,7 +48,6 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 ###  1.1.1 Test for Equality (OSD_EQUALITY)
 |
 | **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For prevention of progression from osteopenia to osteoporosis, the study aims to demonstrate that the mean bone density post-treatment and pre-treatment are different. Given a level of significance of 0.05, evaluate the sample size range for a test of equality to achieve statistical test powers equal to 70%, 80% and 90%.
-
 |
 | **[Null Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density equals 0
 |
@@ -624,9 +623,54 @@ annotate_figure(OSD_PowerAnalysis,
 ```
 
 ##  1.2 Two-Sample Design (TSD)
-
+|
+| [Two-Sample Design](https://www.taylorfrancis.com/books/mono/10.1201/9781315183084/sample-size-calculations-clinical-research-shein-chung-chow-jun-shao-hansheng-wang-yuliya-lokhnygina) involves individual numeric response values from sampled subjects in between treatment and control groups, or between two competing groups. In clinical research, responses could be between a test drug and a placebo control or an active control agent; or between two competing agents. Responses are assumed to be independent normal random variables with zero mean and a given pooled variance. Parameters needed for the computations are as follows:
+|
+| **[A]** <span style="color: #FF0000">Mean Treatment Response</span> : True mean response value obtained from sampled subjects in the treatment group
+|
+| **[B]** <span style="color: #FF0000">Mean Control Response</span> : True mean response value obtained from sampled subjects in the control group
+|
+| **[C]** <span style="color: #FF0000">Epsilon</span> : Mean response differences between the treatment and control groups
+|
+| **[D]** <span style="color: #FF0000">Standard Deviation</span> : Data variability based from the from sampled subjects from both the Treatment and Control groups
+|
+| **[E]** <span style="color: #FF0000">Alpha</span> : Maximum allowed Type I error
+|
+| **[F]** <span style="color: #FF0000">Beta</span> : Maximum allowed Type II error
+|
+| **[G]** <span style="color: #FF0000">Kappa</span> : Matching ratio between the Treatment and Control groups
+|
+| **[H]** <span style="color: #FF0000">Testing Margin</span> : 
+|      **[H.1]** Minimum margin to establish that the mean response is much better than reference
+|      **[H.2]** Minimum margin to establish that the mean response is not much worse as the reference
+|      **[H.3]** Minimum margin to establish that the mean response is no better and no worse than the reference
+|
+| A case scenario was provided as follows to demonstrate sample size computation and power analysis applying the different types of hypotheses:
+|
+| **[Case Scenario]** A clinical research study is being pursued concerning the evaluation of the effect of a test drug on cholesterol in patients with coronary heart disease (CHD). Cholesterol is the main lipid associated with arteriosclerotic vascular disease. The purpose of cholesterol testing is to identify patients at risk for arteriosclerotic heart disease. The liver metabolizes the cholesterol to its free form which is transported in the bloodtream by lipoproteins. As indicated by Pagana and Pagana (1998), nearly 75% of the cholesterol is bound to low density lipoproteins (LDLs) and 25% is bound to high density lipoproteins (HDLs). Therefore, cholesterol is the main component of LDLs and only a minimal component of HDLs and very low density lipoproteins. LDL is the most directly associated with increased risk of CHD. A pharmaceutical company is interested in conducting a clinical trial to compare two cholesterol lowering agents for treatment of patients with CHD through a parallel design. The primary efficacy parameter is the LDL.
+|
 ###  1.2.1 Test for Equality (TSD_EQUALITY)
-
+|
+| **[Research Question]** Suppose that a difference of 3 to 12% in percent change of LDL is considered clinically meaningful difference. The study aims to demonstrate that the mean LDL percent change between the two cholesterol lowering agents are different. Given a level of significance of 0.05, standard deviation of 10% and matching ratio between both groups equal to 1, evaluate the sample size range for a test of equality to achieve statistical test powers equal to 70%, 80% and 90%.
+|
+| **[Null Hypothesis]** Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent change equals 0
+|
+| **[Alternative Hypothesis]** Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent does not equal 0
+|
+| **[Statistical Decision]** Rejection of the null hypothesis implies difference between the mean LDL percent change between both lowering agents
+|
+| **[A]** <span style="color: #FF0000">Epsilon</span> : 3 to 12% at 1% intervals
+|
+| **[B]** <span style="color: #FF0000">Standard Deviation</span> : 10%
+|
+| **[C]** <span style="color: #FF0000">Alpha</span> : 0.05
+|
+| **[D]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
+|
+| **[E]** <span style="color: #FF0000">Kappa</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
+|
+| **[F]** <span style="color: #FF0000">Testing Margin</span> : 0 for the Test of Equality hypothesis
+|
 ###  1.2.2 Test for Non-Inferiority (TSD_NONINFERIORITY)
 
 ###  1.2.3 Test for Superiority (TSD_SUPERIORITY)
