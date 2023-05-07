@@ -193,7 +193,7 @@ OneSampleDesign.Equality.Reshaped
 |
 | **[E]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
 |
-| **[F]** <span style="color: #FF0000">Delta</span> : -0.5 SD testing margin for the Test of Non-Inferiority hypothesis
+| **[F]** <span style="color: #FF0000">Delta</span> : -0.50 SD testing margin for the Test of Non-Inferiority hypothesis
 |
 ```{r section_1.1.2, warning=FALSE, message=FALSE}
 ##################################
@@ -224,7 +224,7 @@ beta=c(0.30,0.20,0.10)
 ##################################
 # Defining the non-inferiority delta
 ##################################
-delta=-0.5
+delta=-0.50
 
 ##################################
 # Computing the range of samples sizes based on different levels of Type II errors
@@ -427,7 +427,7 @@ OneSampleDesign.Superiority.Reshaped
 |
 | **[E]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
 |
-| **[F]** <span style="color: #FF0000">Delta</span> : +0.10 SD testing margin for the Test of Superiority hypothesis
+| **[F]** <span style="color: #FF0000">Delta</span> : +0.10 SD testing margin for the Test of Equivalence hypothesis
 |
 ```{r section_1.1.4, warning=FALSE, message=FALSE}
 ##################################
@@ -526,7 +526,33 @@ OneSampleDesign.Equivalence.Reshaped
 ```
 
 ###  1.1.5 Evaluation Summary
-
+|
+| Sample computation and power analysis comparison:
+|
+| **[A]** The minimum sample size required for the treatment group in a One-Sample Design study is dependent upon the following factors defined and hypothesized prior to the clinical research:
+|      **[A.1]** Study Hypothesis (Equality, Non-Inferiority, Superiority, Equivalence)
+|      **[A.2]** Level of significance (Alpha)
+|      **[A.3]** Power of the test (Beta)
+|      **[A.4]** Epsilon (Difference between Mean Response and Reference)
+|      **[A.5]** Delta (Testing margin, as applicable)
+| **[B]** Given the level of significance = 5% and mean bone density values before treatment = 1.5 SD and after treatment = 2.0 to 4.0 SD representing epsilon values = 0.5 to 2.5, the range of sample sizes is given on the respective power analyses provided for each study hypotheses -
+|      **[B.1]** OSD_EQUALITY : 
+|             **[B.1.1]** For 70% power, sample size = 1 to 25 
+|             **[B.1.2]** For 80% power, sample size = 2 to 32 
+|             **[B.1.3]** For 90% power, sample size = 2 to 43 
+|      **[B.2]** OSD_NONINFERIORITY with Delta = -0.50 SD : 
+|             **[B.2.1]** For 70% power, sample size = 1 to 5 
+|             **[B.2.2]** For 80% power, sample size = 1 to 7 
+|             **[B.2.3]** For 90% power, sample size = 1 to 9 
+|      **[B.3]** OSD_SUPERIORITY with Delta = +0.10 SD :  
+|             **[B.3.1]** For 70% power, sample size = 1 to 30 
+|             **[B.3.2]** For 80% power, sample size = 2 to 39 
+|             **[B.3.3]** For 90% power, sample size = 2 to 54 
+|      **[B.4]** OSD_EQUIVALENCE with Delta = +0.10 SD: 
+|             **[B.4.1]** For 70% power, sample size = 2 to 45 
+|             **[B.4.2]** For 80% power, sample size = 2 to 54 
+|             **[B.4.3]** For 90% power, sample size = 2 to 68 
+|
 ```{r section_1.1.5, warning=FALSE, message=FALSE}
 ##################################
 # Consolidating the power analyses charts
