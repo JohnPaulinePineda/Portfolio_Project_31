@@ -1136,7 +1136,7 @@ TSD_EQUALITY.PowerAnalysis <- ggplot(TwoSampleDesign.Equality.Reshaped,
    scale_x_continuous(name="Hypothesized Mean LDL Percent Change",
                       limits=c(6,12),
                       breaks=seq(6,12,by=1)) +
-  scale_y_continuous(name="Treatment Group Sample Size",
+  scale_y_continuous(name="Sample Size Per Group",
                      limits=c(0,100),
                      breaks=seq(0,100,by=10)) +
   theme(axis.title.x=element_text(color="black",face="bold",size=12),
@@ -1156,7 +1156,7 @@ TSD_NONINFERIORITY.PowerAnalysis <- ggplot(TwoSampleDesign.NonInferiority.Reshap
    scale_x_continuous(name="Hypothesized Mean LDL Percent Change",
                       limits=c(6,12),
                       breaks=seq(6,12,by=1)) +
-  scale_y_continuous(name="Treatment Group Sample Size",
+  scale_y_continuous(name="Sample Size Per Group",
                      limits=c(0,100),
                      breaks=seq(0,100,by=10)) +
   theme(axis.title.x=element_text(color="black",face="bold",size=12),
@@ -1176,7 +1176,7 @@ TSD_SUPERIORITY.PowerAnalysis <- ggplot(TwoSampleDesign.Superiority.Reshaped,
    scale_x_continuous(name="Hypothesized Mean LDL Percent Change",
                       limits=c(6,12),
                       breaks=seq(6,12,by=1)) +
-  scale_y_continuous(name="Treatment Group Sample Size",
+  scale_y_continuous(name="Sample Size Per Group",
                      limits=c(0,100),
                      breaks=seq(0,100,by=10)) +
   theme(axis.title.x=element_text(color="black",face="bold",size=12),
@@ -1196,7 +1196,7 @@ TSD_EQUIVALENCE.PowerAnalysis <- ggplot(TwoSampleDesign.Equivalence.Reshaped,
    scale_x_continuous(name="Hypothesized Mean LDL Percent Change",
                       limits=c(6,12),
                       breaks=seq(6,12,by=1)) +
-  scale_y_continuous(name="Treatment Group Sample Size",
+  scale_y_continuous(name="Sample Size Per Group",
                      limits=c(0,100),
                      breaks=seq(0,100,by=10)) +
   theme(axis.title.x=element_text(color="black",face="bold",size=12),
@@ -1237,6 +1237,18 @@ annotate_figure(TSD_PowerAnalysis,
 | **[Book]** [Design and Analysis of Experiments with R](https://www.taylorfrancis.com/books/mono/10.1201/b17883/design-analysis-experiments-john-lawson) by John Lawson
 | **[Book]** [Design and Analysis of Experiments](https://link.springer.com/book/10.1007/978-3-319-52250-0) by Angela Dean , Daniel Voss and Danel Draguljić
 | **[Book]** [Design and Analysis of Experiments](https://bcs.wiley.com/he-bcs/Books?action=index&bcsId=10790&itemId=1119320933) by Douglas Montgomery
+| **[R Package]** [rstatix](https://mran.microsoft.com/web/packages/rstatix/index.html) by Alboukadel Kassambara
+| **[R Package]** [car](https://cran.r-project.org/web/packages/car/vignettes/embedding.pdf) by John Fox and Sanford Weisberg
+| **[R Package]** [effects](https://cran.r-project.org/web/packages/effects/vignettes/methods-supported-by-effects.pdf) by John Fox and Sanford Weisberg
+| **[R Package]** [multcomp](https://cran.r-project.org/web/packages/multcomp/vignettes/generalsiminf.pdf) by Torsten Hothorn, Frank Bretz and Peter Westfall
+| **[R Package]** [psych](http://personality-project.org/r/overview.pdf) by William Revelle
+| **[R Package]** [bootstrap](https://cran.r-project.org/web/packages/bootstrap/bootstrap.pdf) by Robert Tibshirani
+| **[R Package]** [moments](https://cran.r-project.org/web/packages/moments/index.html) by Lukasz Komsta and Frederick Novomestky
+| **[R Package]** [dplyr](https://cran.r-project.org/web/packages/dplyr/index.html) by Hadley Wickham
+| **[R Package]** [ggplot2](https://cran.r-project.org/web/packages/ggplot2/) by Hadley Wickham
+| **[R Package]** [ggpubr](https://cran.r-project.org/web/packages/ggpubr/index.html) by Alboukadel Kassambara
+| **[R Package]** [ggfortify](https://cran.r-project.org/web/packages/ggfortify/index.html) by Yuan Tang
+| **[R Package]** [trend](https://cran.r-project.org/web/packages/trend/index.html) by Thorsten Pohlert
 | **[Article]** [Power and Sample Size](https://powerandsamplesize.com/) by HyLown Consulting Team
 | **[Article]** [An Introduction to Different Types of Study Design](https://s4be.cochrane.org/blog/2021/04/06/an-introduction-to-different-types-of-study-design/) by Hadi Abbas
 | **[Article]** [Case-Control and Cohort Studies: A Brief Overview](https://s4be.cochrane.org/blog/2017/12/06/case-control-and-cohort-studies-overview/) by Saul Crandon
