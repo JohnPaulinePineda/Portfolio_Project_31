@@ -41,7 +41,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 |      **[F.2]** Minimum testing margin to establish that the mean response is not much worse as the reference
 |      **[F.3]** Minimum testing margin to establish that the mean response is no better and no worse than the reference
 |
-| A case scenario was provided as follows to demonstrate sample size computation and power analysis applying the different types of hypotheses:
+| A case scenario was provided as follows to demonstrate sample size computation and power analysis as applied on different types of hypotheses:
 |
 | **[Case Scenario]** A clinical research study is being pursued concerning osteoporosis in post-menopausal women. Osteoporosis and osteopenia (or decreased bone mass) most commonly develop in post-menopausal women. The consequences of osteoporosis are vertebral crush fractures and hip fractures. The diagnosis of osteoporosis is made when vertebral bone density is more than 10% below what is expected for sex, age, height, weight, and race. Usually, bone density is reported in terms of standard deviation (SD) from mean values. The World Health Organization (WHO) defines osteopenia as bone density value greater than one SD below peak bone mass levels in young women and osteoporosis as a value of greater than 2.5 SD below the same measurement scale. In medical practice, most clinicians suggest therapeutic intervention should be begun in patients with osteopenia to prevent progression to osteoporosis.
 |
@@ -676,7 +676,7 @@ annotate_figure(OSD_PowerAnalysis,
 |      **[H.2]** Minimum testing margin to establish that the mean treatment response is much better than control
 |      **[H.3]** Minimum testing margin to establish that the mean treatment response is much better than control
 |
-| A case scenario was provided as follows to demonstrate sample size computation and power analysis applying the different types of hypotheses:
+| A case scenario was provided as follows to demonstrate sample size computation and power analysis as applied on different types of hypotheses:
 |
 | **[Case Scenario]** A clinical research study is being pursued concerning the evaluation of the effect of a test drug on cholesterol in patients with coronary heart disease (CHD). Cholesterol is the main lipid associated with arteriosclerotic vascular disease. The purpose of cholesterol testing is to identify patients at risk for arteriosclerotic heart disease. The liver metabolizes the cholesterol to its free form which is transported in the bloodtream by lipoproteins. As indicated by Pagana and Pagana (1998), nearly 75% of the cholesterol is bound to low density lipoproteins (LDLs) and 25% is bound to high density lipoproteins (HDLs). Therefore, cholesterol is the main component of LDLs and only a minimal component of HDLs and very low density lipoproteins. LDL is the most directly associated with increased risk of CHD. A pharmaceutical company is interested in conducting a clinical trial to compare two cholesterol lowering agents for treatment of patients with CHD through a parallel design. The primary efficacy parameter is the LDL.
 |
@@ -1290,7 +1290,7 @@ annotate_figure(TSD_PowerAnalysis,
 |
 | **[G]** <span style="color: #FF0000">Tau</span> : Number of treatment groups
 |
-| A case scenario was provided as follows to demonstrate sample size computation and power analysis applying the different types of hypotheses:
+| A case scenario was provided as follows to demonstrate sample size computation and power analysis as applied on different treatment pairs:
 |
 | **[Case Scenario]** A clinical research study was conducted to investigate pharmaceutical compounds for treatment of patients with cancer. The investigator is not only interested in showing efficacy of the test drug but also in establishing the dose response curve. To achieve this study objective, a three-arm parallel group, double-blind, randomized clinical trial was designed to compare three treatments: A (Placebo), B (10 mg) and C (30 mg). Based on the results from the pilot study, it is estimated that the standard deviation is 3.5.
 |
