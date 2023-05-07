@@ -1564,13 +1564,13 @@ MultipleSampleDesign.BC.Equality.Reshaped
 |
 | Sample computation and power analysis comparison:
 |
-| **[A]** The minimum sample size required for the treatment group in a Multiple-Sample Design One-Way ANOVA Pairwise study is dependent upon the following factors defined and hypothesized prior to the clinical research:
+| **[A]** The minimum sample size required for each treatment group in a Multiple-Sample Design One-Way ANOVA Pairwise study is dependent upon the following factors defined and hypothesized prior to the clinical research:
 |      **[A.1]** Level of significance (Alpha) : Lower value increases sample size
 |      **[A.2]** Power of the test (Beta) : Higher value increases sample size
 |      **[A.3]** Data variability (Standard Deviation) : Higher value increases sample size
 |      **[A.4]** Epsilon (Difference between pairwise Mean Responses) : Lower value increases sample size
 |      **[A.5]** Tau (Number of treatment groups) : Higher value increases sample size
-| **[B]** Given the level of significance = 5%, standard deviation = 3.5, number of treatments = 3 and a varying range of clinical response values across pairwise combinations of treatments, the sample size is determined as the maximum number obtained for all computations -
+| **[B]** Given the level of significance = 5%, standard deviation = 3.5, number of treatments = 3 and a varying range of clinical response values across pairwise combinations of treatments, the sample size is determined as the maximum number obtained for all computations under each statistical power -
 |      **[B.1]** 70% power, sample size = 24
 |      **[B.2]** 80% power, sample size = 32  
 |      **[B.3]** 90% power, sample size = 45  
