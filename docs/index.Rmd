@@ -1321,7 +1321,7 @@ annotate_figure(TSD_PowerAnalysis,
 ```{r section_1.3.1, warning=FALSE, message=FALSE}
 
 ##################################
-# Defining a fixed hypothesized values for mu_A
+# Defining a fixed hypothesized value for mu_A
 ##################################
 mu_AF=9.0
 
@@ -1336,7 +1336,7 @@ mu_BR=seq(11.0,13.0,0.5)
 mu_BF=13.0
 
 ##################################
-# Defining a range of hypothesized values for mu_C
+# Defining a range of hypothesized value for mu_C
 ##################################
 mu_CR=seq(15.0,17.0,0.5)
 
@@ -1362,7 +1362,7 @@ tau=3
 
 ##################################
 # Conducting a pairwise comparison
-# between Treatment A and B
+# between Treatments A and B
 ##################################
 
 ##################################
@@ -1428,7 +1428,7 @@ MultipleSampleDesign.AB.Equality.Reshaped
 
 ##################################
 # Conducting a pairwise comparison
-# between Treatment A and C
+# between Treatments A and C
 ##################################
 
 ##################################
@@ -1494,7 +1494,7 @@ MultipleSampleDesign.AC.Equality.Reshaped
 
 ##################################
 # Conducting a pairwise comparison
-# between Treatment B and C
+# between Treatments B and C
 ##################################
 
 ##################################
