@@ -36,10 +36,10 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 |
 | **[E]** <span style="color: #FF0000">Beta</span> : Maximum allowed Type II error
 |
-| **[F]** <span style="color: #FF0000">Testing Margin</span> : 
-|      **[F.1]** Minimum margin to establish that the mean response is much better than reference
-|      **[F.2]** Minimum margin to establish that the mean response is not much worse as the reference
-|      **[F.3]** Minimum margin to establish that the mean response is no better and no worse than the reference
+| **[F]** <span style="color: #FF0000">Delta</span> : 
+|      **[F.1]** Minimum testing margin to establish that the mean response is much better than reference
+|      **[F.2]** Minimum testing margin to establish that the mean response is not much worse as the reference
+|      **[F.3]** Minimum testing margin to establish that the mean response is no better and no worse than the reference
 |
 | A case scenario was provided as follows to demonstrate sample size computation and power analysis applying the different types of hypotheses:
 |
@@ -65,7 +65,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 |
 | **[E]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
 |
-| **[F]** <span style="color: #FF0000">Testing Margin</span> : 0 for the Test of Equality hypothesis
+| **[F]** <span style="color: #FF0000">Delta</span> : 0 testing margin for the Test of Equality hypothesis
 |
 ```{r section_1.1.1, warning=FALSE, message=FALSE}
 
@@ -181,7 +181,7 @@ OneSampleDesign.Equality.Reshaped
 |
 | **[Alternative Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density > Clinically meaningful difference
 |
-| **[Statistical Decision]** Rejection of the null hypothesis implies non-inferiority of the mean bone density treatment as compared to non-treatment, given the testing margin
+| **[Statistical Decision]** Rejection of the null hypothesis implies non-inferiority of the mean bone density treatment as compared to non-treatment, given the delta
 |
 | **[A]** <span style="color: #FF0000">Mean Response</span> : 2.0 to 4.0 SD at 0.20 intervals 
 |
@@ -193,7 +193,7 @@ OneSampleDesign.Equality.Reshaped
 |
 | **[E]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
 |
-| **[F]** <span style="color: #FF0000">Testing Margin</span> : -0.5 SD for the Test of Non-Inferiority hypothesis
+| **[F]** <span style="color: #FF0000">Delta</span> : -0.5 SD testing margin for the Test of Non-Inferiority hypothesis
 |
 ```{r section_1.1.2, warning=FALSE, message=FALSE}
 ##################################
@@ -222,29 +222,29 @@ alpha=0.05
 beta=c(0.30,0.20,0.10)
 
 ##################################
-# Defining the non-inferiority testing margin
+# Defining the non-inferiority delta
 ##################################
-epsilon=-0.5
+delta=-0.5
 
 ##################################
 # Computing the range of samples sizes based on different levels of Type II errors
 ##################################
 beta_1=beta[1]
-(n_Beta30=(sd*(qnorm(1-alpha)+qnorm(1-beta_1))/(mu_Response-mu_Reference-epsilon))^2)
+(n_Beta30=(sd*(qnorm(1-alpha)+qnorm(1-beta_1))/(mu_Response-mu_Reference-delta))^2)
 ceiling(n_Beta30)
-z_Beta30=(mu_Response-mu_Reference-epsilon)/(sd/sqrt(n_Beta30))
+z_Beta30=(mu_Response-mu_Reference-delta)/(sd/sqrt(n_Beta30))
 (Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha))+pnorm(-z_Beta30-qnorm(1-alpha)))
 
 beta_2=beta[2]
-(n_Beta20=(sd*(qnorm(1-alpha)+qnorm(1-beta_2))/(mu_Response-mu_Reference-epsilon))^2)
+(n_Beta20=(sd*(qnorm(1-alpha)+qnorm(1-beta_2))/(mu_Response-mu_Reference-delta))^2)
 ceiling(n_Beta20)
-z_Beta20=(mu_Response-mu_Reference-epsilon)/(sd/sqrt(n_Beta20))
+z_Beta20=(mu_Response-mu_Reference-delta)/(sd/sqrt(n_Beta20))
 (Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha))+pnorm(-z_Beta20-qnorm(1-alpha)))
 
 beta_3=beta[3]
-(n_Beta10=(sd*(qnorm(1-alpha)+qnorm(1-beta_3))/(mu_Response-mu_Reference-epsilon))^2)
+(n_Beta10=(sd*(qnorm(1-alpha)+qnorm(1-beta_3))/(mu_Response-mu_Reference-delta))^2)
 ceiling(n_Beta10)
-z_Beta10=(mu_Response-mu_Reference-epsilon)/(sd/sqrt(n_Beta10))
+z_Beta10=(mu_Response-mu_Reference-delta)/(sd/sqrt(n_Beta10))
 (Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha))+pnorm(-z_Beta10-qnorm(1-alpha)))
 
 OneSampleDesign.NonInferiority <- as.data.frame(cbind(mu_Response,n_Beta30,n_Beta20,n_Beta10))
@@ -267,7 +267,7 @@ OneSampleDesign.NonInferiority.Reshaped
 ##################################
 # Plotting the sample sizes and power curves
 ##################################
-(OneSampleDesign.NonInferiority.PowerAnalysis <- ggplot(OneSampleDesign.NonInferiority.Reshaped,
+(OneSampleDesign.NonInferiority.PowerAnalysis <-ggplot(OneSampleDesign.NonInferiority.Reshaped,
                                                       aes(x=Posttreatment.Mean.Bone.Density,
                                                           y=Sample.Size, 
                                                           color=Power)) +
@@ -298,7 +298,7 @@ OneSampleDesign.NonInferiority.Reshaped
 |
 | **[Alternative Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density > Clinically meaningful difference
 |
-| **[Statistical Decision]** Rejection of the null hypothesis implies non-inferiority of the mean bone density treatment as compared to non-treatment, given the testing margin
+| **[Statistical Decision]** Rejection of the null hypothesis implies non-inferiority of the mean bone density treatment as compared to non-treatment, given the delta
 |
 | **[A]** <span style="color: #FF0000">Mean Response</span> : 2.0 to 4.0 SD at 0.20 intervals 
 |
@@ -310,7 +310,7 @@ OneSampleDesign.NonInferiority.Reshaped
 |
 | **[E]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
 |
-| **[F]** <span style="color: #FF0000">Testing Margin</span> : +0.10 SD for the Test of Superiority hypothesis
+| **[F]** <span style="color: #FF0000">Delta</span> : +0.10 SD testing margin for the Test of Superiority hypothesis
 |
 ```{r section_1.1.3, warning=FALSE, message=FALSE}
 ##################################
@@ -339,29 +339,29 @@ alpha=0.05
 beta=c(0.30,0.20,0.10)
 
 ##################################
-# Defining the superiority testing margin
+# Defining the superiority delta
 ##################################
-epsilon= 0.10
+delta= 0.10
 
 ##################################
 # Computing the range of samples sizes based on different levels of Type II errors
 ##################################
 beta_1=beta[1]
-(n_Beta30=(sd*(qnorm(1-alpha)+qnorm(1-beta_1))/(mu_Response-mu_Reference-epsilon))^2)
+(n_Beta30=(sd*(qnorm(1-alpha)+qnorm(1-beta_1))/(mu_Response-mu_Reference-delta))^2)
 ceiling(n_Beta30)
-z_Beta30=(mu_Response-mu_Reference-epsilon)/(sd/sqrt(n_Beta30))
+z_Beta30=(mu_Response-mu_Reference-delta)/(sd/sqrt(n_Beta30))
 (Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha))+pnorm(-z_Beta30-qnorm(1-alpha)))
 
 beta_2=beta[2]
-(n_Beta20=(sd*(qnorm(1-alpha)+qnorm(1-beta_2))/(mu_Response-mu_Reference-epsilon))^2)
+(n_Beta20=(sd*(qnorm(1-alpha)+qnorm(1-beta_2))/(mu_Response-mu_Reference-delta))^2)
 ceiling(n_Beta20)
-z_Beta20=(mu_Response-mu_Reference-epsilon)/(sd/sqrt(n_Beta20))
+z_Beta20=(mu_Response-mu_Reference-delta)/(sd/sqrt(n_Beta20))
 (Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha))+pnorm(-z_Beta20-qnorm(1-alpha)))
 
 beta_3=beta[3]
-(n_Beta10=(sd*(qnorm(1-alpha)+qnorm(1-beta_3))/(mu_Response-mu_Reference-epsilon))^2)
+(n_Beta10=(sd*(qnorm(1-alpha)+qnorm(1-beta_3))/(mu_Response-mu_Reference-delta))^2)
 ceiling(n_Beta10)
-z_Beta10=(mu_Response-mu_Reference-epsilon)/(sd/sqrt(n_Beta10))
+z_Beta10=(mu_Response-mu_Reference-delta)/(sd/sqrt(n_Beta10))
 (Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha))+pnorm(-z_Beta10-qnorm(1-alpha)))
 
 OneSampleDesign.Superiority <- as.data.frame(cbind(mu_Response,n_Beta30,n_Beta20,n_Beta10))
@@ -415,7 +415,7 @@ OneSampleDesign.Superiority.Reshaped
 |
 | **[Alternative Hypothesis]** Absolute value of (Post-treatment mean bone density - Post-treatment) mean bone density < Clinically meaningful difference
 |
-| **[Statistical Decision]** Rejection of the null hypothesis implies equivalence of the mean bone density treatment as compared to non-treatment, given the testing margin
+| **[Statistical Decision]** Rejection of the null hypothesis implies equivalence of the mean bone density treatment as compared to non-treatment, given the delta
 |
 | **[A]** <span style="color: #FF0000">Mean Response</span> : 2.0 to 4.0 SD at 0.20 intervals 
 |
@@ -427,7 +427,7 @@ OneSampleDesign.Superiority.Reshaped
 |
 | **[E]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
 |
-| **[F]** <span style="color: #FF0000">Testing Margin</span> : +0.10 SD for the Test of Superiority hypothesis
+| **[F]** <span style="color: #FF0000">Delta</span> : +0.10 SD testing margin for the Test of Superiority hypothesis
 |
 ```{r section_1.1.4, warning=FALSE, message=FALSE}
 ##################################
@@ -456,30 +456,30 @@ alpha=0.05
 beta=c(0.30,0.20,0.10)
 
 ##################################
-# Defining the equivalence testing margin
+# Defining the equivalence delta
 ##################################
-epsilon= 0.10
+delta= 0.10
 
 ##################################
 # Computing the range of samples sizes based on different levels of Type II errors
 ##################################
 beta_1=beta[1]
-(n_Beta30=(sd*(qnorm(1-alpha)+qnorm(1-beta_1/2))/(epsilon-abs(mu_Response-mu_Reference)))^2)
+(n_Beta30=(sd*(qnorm(1-alpha)+qnorm(1-beta_1/2))/(delta-abs(mu_Response-mu_Reference)))^2)
 ceiling(n_Beta30)
-z_Beta30=(abs(mu_Response-mu_Reference)-epsilon)/(sd/sqrt(n_Beta30))
+z_Beta30=(abs(mu_Response-mu_Reference)-delta)/(sd/sqrt(n_Beta30))
 (Power_Beta30=2*(pnorm(z_Beta30-qnorm(1-alpha))+pnorm(-z_Beta30-qnorm(1-alpha)))-1)
 
 beta_2=beta[2]
-(n_Beta20=(sd*(qnorm(1-alpha)+qnorm(1-beta_2/2))/(epsilon-abs(mu_Response-mu_Reference)))^2)
+(n_Beta20=(sd*(qnorm(1-alpha)+qnorm(1-beta_2/2))/(delta-abs(mu_Response-mu_Reference)))^2)
 ceiling(n_Beta20)
-z_Beta20=(abs(mu_Response-mu_Reference)-epsilon)/(sd/sqrt(n_Beta20))
+z_Beta20=(abs(mu_Response-mu_Reference)-delta)/(sd/sqrt(n_Beta20))
 (Power_Beta20=2*(pnorm(z_Beta20-qnorm(1-alpha))+pnorm(-z_Beta20-qnorm(1-alpha)))-1)
 (Power_Beta20=2*(pnorm(z_Beta20-qnorm(alpha)))-1)
 
 beta_3=beta[3]
-(n_Beta10=(sd*(qnorm(1-alpha)+qnorm(1-beta_3/2))/(epsilon-abs(mu_Response-mu_Reference)))^2)
+(n_Beta10=(sd*(qnorm(1-alpha)+qnorm(1-beta_3/2))/(delta-abs(mu_Response-mu_Reference)))^2)
 ceiling(n_Beta10)
-z_Beta10=(abs(mu_Response-mu_Reference)-epsilon)/(sd/sqrt(n_Beta10))
+z_Beta10=(abs(mu_Response-mu_Reference)-delta)/(sd/sqrt(n_Beta10))
 (Power_Beta10=2*(pnorm(z_Beta10-qnorm(1-alpha))+pnorm(-z_Beta10-qnorm(1-alpha)))-1)
 
 OneSampleDesign.Equivalence <- as.data.frame(cbind(mu_Response,n_Beta30,n_Beta20,n_Beta10))
@@ -648,10 +648,10 @@ annotate_figure(OSD_PowerAnalysis,
 |
 | **[G]** <span style="color: #FF0000">Kappa</span> : Matching ratio between the Treatment and Control groups
 |
-| **[H]** <span style="color: #FF0000">Testing Margin</span> : 
-|      **[H.1]** Minimum margin to establish that the mean response is much better than reference
-|      **[H.2]** Minimum margin to establish that the mean response is not much worse as the reference
-|      **[H.3]** Minimum margin to establish that the mean response is no better and no worse than the reference
+| **[H]** <span style="color: #FF0000">Delta</span> : 
+|      **[H.1]** Minimum testing margin to establish that the mean response is much better than reference
+|      **[H.2]** Minimum testing margin to establish that the mean response is not much worse as the reference
+|      **[H.3]** Minimum testing margin to establish that the mean response is no better and no worse than the reference
 |
 | A case scenario was provided as follows to demonstrate sample size computation and power analysis applying the different types of hypotheses:
 |
@@ -677,7 +677,7 @@ annotate_figure(OSD_PowerAnalysis,
 |
 | **[E]** <span style="color: #FF0000">Kappa</span> : 1.0
 |
-| **[F]** <span style="color: #FF0000">Testing Margin</span> : 0 for the Test of Equality hypothesis
+| **[F]** <span style="color: #FF0000">Delta</span> : 0 testing margin for the Test of Equality hypothesis
 |
 ```{r section_1.2.1, warning=FALSE, message=FALSE}
 
@@ -790,9 +790,9 @@ TwoSampleDesign.Equality.Reshaped
 |
 | **[E]** <span style="color: #FF0000">Kappa</span> : 1.0
 |
-| **[F]** <span style="color: #FF0000">Testing Margin</span> : -5 SD for the Test of Non-Inferiority hypothesis
+| **[F]** <span style="color: #FF0000">Delta</span> : -5 testing margin for the Test of Non-Inferiority hypothesis
 |
-```{r section_1.2.1, warning=FALSE, message=FALSE}
+```{r section_1.2.2, warning=FALSE, message=FALSE}
 
 ##################################
 # Defining a range of possible hypothesized values for epsilon
@@ -820,28 +820,33 @@ beta=c(0.30,0.20,0.10)
 kappa=1.0
 
 ##################################
+# Defining the non-inferiority delta
+##################################
+delta=-5
+
+##################################
 # Computing the range of samples sizes based on different levels of Type II errors
 ##################################
 beta_1=beta[1]
-(n_Beta30=(1+1/kappa)*(sd*(qnorm(1-alpha/2)+qnorm(1-beta_1))/(epsilon))^2)
+(n_Beta30=(1+1/kappa)*(sd*(qnorm(1-alpha)+qnorm(1-beta_1))/(epsilon-delta))^2)
 ceiling(n_Beta30)
-z_Beta30=(epsilon)/(sd*sqrt((1+1/kappa)/n_Beta30))
-(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/2))+pnorm(-z_Beta30-qnorm(1-alpha/2)))
+z_Beta30=(epsilon-delta)/(sd*sqrt((1+1/kappa)/n_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha))+pnorm(-z_Beta30-qnorm(1-alpha)))
 
 beta_2=beta[2]
-(n_Beta20=(1+1/kappa)*(sd*(qnorm(1-alpha/2)+qnorm(1-beta_2))/(epsilon))^2)
+(n_Beta20=(1+1/kappa)*(sd*(qnorm(1-alpha)+qnorm(1-beta_2))/(epsilon-delta))^2)
 ceiling(n_Beta20)
-z_Beta20=(epsilon)/(sd*sqrt((1+1/kappa)/n_Beta20))
-(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha/2))+pnorm(-z_Beta20-qnorm(1-alpha/2)))
+z_Beta20=(epsilon-delta)/(sd*sqrt((1+1/kappa)/n_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha))+pnorm(-z_Beta20-qnorm(1-alpha)))
 
 beta_3=beta[3]
-(n_Beta10=(1+1/kappa)*(sd*(qnorm(1-alpha/2)+qnorm(1-beta_3))/(epsilon))^2)
+(n_Beta10=(1+1/kappa)*(sd*(qnorm(1-alpha)+qnorm(1-beta_3))/(epsilon-delta))^2)
 ceiling(n_Beta10)
-z_Beta10=(epsilon)/(sd*sqrt((1+1/kappa)/n_Beta10))
-(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha/2))+pnorm(-z_Beta10-qnorm(1-alpha/2)))
+z_Beta10=(epsilon-delta)/(sd*sqrt((1+1/kappa)/n_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha))+pnorm(-z_Beta10-qnorm(1-alpha)))
 
-TwoSampleDesign.Equality <- as.data.frame(cbind(epsilon,n_Beta30,n_Beta20,n_Beta10))
-names(TwoSampleDesign.Equality) <- c("Mean.LDL.Percent.Change",
+TwoSampleDesign.NonInferiority <- as.data.frame(cbind(epsilon,n_Beta30,n_Beta20,n_Beta10))
+names(TwoSampleDesign.NonInferiority) <- c("Mean.LDL.Percent.Change",
                                  "Power=70%",
                                  "Power=80%",
                                  "Power=90%")
@@ -849,18 +854,18 @@ names(TwoSampleDesign.Equality) <- c("Mean.LDL.Percent.Change",
 ##################################
 # Restructuring the data
 ##################################
-TwoSampleDesign.Equality.Reshaped <- gather(TwoSampleDesign.Equality,
+TwoSampleDesign.NonInferiority.Reshaped <- gather(TwoSampleDesign.NonInferiority,
                                             "Power=70%","Power=80%","Power=90%",
                                             key="Power",
                                             value="Sample.Size")
-TwoSampleDesign.Equality.Reshaped$Label <- rep("OSD_EQUALITY",nrow(TwoSampleDesign.Equality.Reshaped))
+TwoSampleDesign.NonInferiority.Reshaped$Label <- rep("OSD_NONINFERIORITY",nrow(TwoSampleDesign.NonInferiority.Reshaped))
 
-TwoSampleDesign.Equality.Reshaped
+TwoSampleDesign.NonInferiority.Reshaped
 
 ##################################
 # Plotting the sample sizes and power curves
 ##################################
-(TwoSampleDesign.Equality.PowerAnalysis <- ggplot(TwoSampleDesign.Equality.Reshaped,
+(TwoSampleDesign.NonInferiority.PowerAnalysis <-ggplot(TwoSampleDesign.NonInferiority.Reshaped,
                                                       aes(x=Mean.LDL.Percent.Change,
                                                           y=Sample.Size, 
                                                           color=Power)) +
@@ -879,7 +884,7 @@ TwoSampleDesign.Equality.Reshaped
         legend.position="top",
         axis.title.y=element_text(color="black",face="bold",size=12),
         plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
-  ggtitle("Two-Sample Design : Test for Equality"))
+  ggtitle("Two-Sample Design : Test for Non-Inferiority"))
 
 ```
 ###  1.2.3 Test for Superiority (TSD_SUPERIORITY)
