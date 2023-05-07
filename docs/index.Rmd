@@ -534,7 +534,7 @@ OneSampleDesign.Equivalence.Reshaped
 |      **[A.2]** Level of significance (Alpha) : Lower value increases sample size
 |      **[A.3]** Power of the test (Beta) : Higher value increases sample size
 |      **[A.4]** Data variability (Standard Deviation) : Higher value increases sample size
-|      **[A.5]** Epsilon (Difference between Mean Response and Reference) : Higher value increases sample size
+|      **[A.5]** Epsilon (Difference between Mean Response and Reference) : Lower value increases sample size
 |      **[A.6]** Delta (Testing margin, as applicable) : Higher value increases sample size
 | **[B]** Given the level of significance = 5%, standard deviation = 1 and mean bone density values before treatment = 1.5 SD and after treatment = 2.0 to 4.0 SD representing epsilon values = 0.5 to 2.5, the range of sample sizes is given on the respective power analyses provided for each study hypotheses -
 |      **[B.1]** OSD_EQUALITY : 
@@ -1153,7 +1153,7 @@ TwoSampleDesign.Equivalence.Reshaped
 |      **[A.2]** Level of significance (Alpha) : Lower value increases sample size
 |      **[A.3]** Power of the test (Beta) : Higher value increases sample size
 |      **[A.4]** Data variability (Standard Deviation) : Higher value increases sample size
-|      **[A.5]** Epsilon (Difference between Mean Response and Reference) : Higher value increases sample size
+|      **[A.5]** Epsilon (Difference between Mean Response and Reference) : Lower value increases sample size
 |      **[A.6]** Delta (Testing margin, as applicable) : Higher value increases sample size
 | **[B]** Given the level of significance = 5%, standard deviation = 10, matching sample size ratio between groups = 1 and LDL percent change between two cholesterol lowering agents representing epsilon values = 6 to 12%, the range of sample sizes is given on the respective power analyses provided for each study hypotheses -
 |      **[B.1]** OSD_EQUALITY : 
@@ -1272,11 +1272,387 @@ annotate_figure(TSD_PowerAnalysis,
 
 ```
 
-##  1.3 K-Sample Design One-Way ANOVA Pairwise (KSDOWAP)
+##  1.3 Multiple-Sample Design One-Way ANOVA Pairwise (MSDOWAP)
+|
+| [Multiple-Sample Design One-Way ANOVA Pairwise](https://www.taylorfrancis.com/books/mono/10.1201/9781315183084/sample-size-calculations-clinical-research-shein-chung-chow-jun-shao-hansheng-wang-yuliya-lokhnygina) involves individual numeric response values from sampled subjects across three or more competing treatment groups. In clinical research, responses could be between multiple test drugs and a placebo control or an active control agent; or between multiple competing agents. The response and treatment variables are modeled using a One-Way ANOVA model involving the fixed effect of the treatment and random errors which are assumed to be independent and identically distributed normal random variables with zero mean and a given variance. For a pairwise comparison between treatments, all possible combinations must be analyzed. Due to the multiple comparisons inflating the Type I error, adjustments arre made for controlling the overall Type I error rate at the desired significance level. Parameters needed for the computations are as follows:
+|
+| **[A]** <span style="color: #FF0000">Mean Treatment 1 Response</span> : True mean response value obtained from sampled subjects in the first treatment group
+|
+| **[B]** <span style="color: #FF0000">Mean Treatment 2 Response</span> : True mean response value obtained from sampled subjects in the second treatment group
+|
+| **[C]** <span style="color: #FF0000">Epsilon</span> : Mean response differences between the two treatment groups
+|
+| **[D]** <span style="color: #FF0000">Standard Deviation</span> : Data variability based from the from sampled subjects from both treatment groups
+|
+| **[E]** <span style="color: #FF0000">Alpha</span> : Maximum allowed Type I error
+|
+| **[F]** <span style="color: #FF0000">Beta</span> : Maximum allowed Type II error
+|
+| **[G]** <span style="color: #FF0000">Tau</span> : Number of treatment groups
+|
+| A case scenario was provided as follows to demonstrate sample size computation and power analysis applying the different types of hypotheses:
+|
+| **[Case Scenario]** A clinical research study was conducted to investigate pharmaceutical compounds for treatment of patients with cancer. The investigator is not only interested in showing efficacy of the test drug but also in establishing the dose response curve. To achieve this study objective, a three-arm parallel group, double-blind, randomized clinical trial was designed to compare three treatments: A (Placebo), B (10 mg) and C (30 mg). Based on the results from the pilot study, it is estimated that the standard deviation is 3.5.
+|
+###  1.3.1 Test for Equality (MSDOWAP_EQUALITY)
+|
+| **[Research Question]** Suppose that the hypothesized mean clinical response for the placebo treatment is 8.0. However, clinical responses for Treatments B and C were expected to range from  11.0 to 15.0 and 16.0 to 20.0, respectively, with increments of 1.0. The study aims to demonstrate the efficacy of each treatment as pairwise compared against each other. Given a level of significance of 0.05, evaluate the sample size range for a test of equality to achieve statistical test powers equal to 70%, 80% and 90%.
+|
+| **[Null Hypothesis]** Mean clinical response of the first evaluated treatment equals the Mean clinical response of the second evaluated treatment
+|
+| **[Alternative Hypothesis]** Mean clinical response of the first evaluated treatment is not equal to the Mean clinical response of the second evaluated treatment
+|
+| **[Hypothesis Test]** Rejection of the null hypothesis implies difference between the mean clinical response values between both evaluated treatments
+|
+| **[A]** <span style="color: #FF0000">Mean Response : Treatment A</span> : 9.0
+|
+| **[B]** <span style="color: #FF0000">Mean Response : Treatment B</span> : 11.0 to 13.0 at 0.5 intervals
+|
+| **[C]** <span style="color: #FF0000">Mean Response : Treatment C</span> : 15.0 to 17.0 at 0.5 intervals 
+|
+| **[D]** <span style="color: #FF0000">Standard Deviation</span> : 3.50
+|
+| **[D]** <span style="color: #FF0000">Alpha</span> : 0.05
+|
+| **[E]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
+|
+| **[F]** <span style="color: #FF0000">Tau</span> : 3 representing the number of treatments
+|
+```{r section_1.3.1, warning=FALSE, message=FALSE}
 
-###  1.3.1 Test for Equality (KSDOWAP_EQUALITY)
+##################################
+# Defining a fixed hypothesized values for mu_A
+##################################
+mu_AF=9.0
+
+##################################
+# Defining a range of hypothesized values for mu_B
+##################################
+mu_BR=seq(11.0,13.0,0.5)
+##################################
+# Defining a fixed hypothesized value for mu_B
+# using the highest value from the range
+##################################
+mu_BF=13.0
+
+##################################
+# Defining a range of hypothesized values for mu_C
+##################################
+mu_CR=seq(15.0,17.0,0.5)
+
+##################################
+# Defining a fixed hypothesized value for the standard deviation
+##################################
+sd=3.5
+
+##################################
+# Defining a fixed hypothesized value for the Type I error
+##################################
+alpha=0.05
+
+##################################
+# Defining a range of possible hypothesized values for the Type II error
+##################################
+beta=c(0.30,0.20,0.10)
+
+##################################
+# Defining the number of treatments
+##################################
+tau=3
+
+##################################
+# Conducting a pairwise comparison
+# between Treatment A and B
+##################################
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_1))/(mu_BR-mu_AF))^2)
+ceiling(n_Beta30)
+z_Beta30=(mu_BR-mu_AF)/(sd*sqrt(2/n_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta30-qnorm(1-alpha/(2/tau))))
+
+beta_2=beta[2]
+(n_Beta20=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_2))/(mu_BR-mu_AF))^2)
+ceiling(n_Beta20)
+z_Beta20=(mu_BR-mu_AF)/(sd*sqrt(2/n_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta20-qnorm(1-alpha/(2/tau))))
+
+beta_3=beta[3]
+(n_Beta10=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_3))/(mu_BR-mu_AF))^2)
+ceiling(n_Beta10)
+z_Beta10=(mu_BR-mu_AF)/(sd*sqrt(2/n_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta10-qnorm(1-alpha/(2/tau))))
+
+MultipleSampleDesign.AB.Equality <- as.data.frame(cbind(mu_BR,n_Beta30,n_Beta20,n_Beta10))
+names(MultipleSampleDesign.AB.Equality) <- c("Clinical.Response",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+MultipleSampleDesign.AB.Equality.Reshaped <- gather(MultipleSampleDesign.AB.Equality,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+MultipleSampleDesign.AB.Equality.Reshaped$Label <- rep("MSDOWAP_AB_EQUALITY",nrow(MultipleSampleDesign.AB.Equality.Reshaped))
+
+MultipleSampleDesign.AB.Equality.Reshaped
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(MultipleSampleDesign.AB.Equality.PowerAnalysis <-    ggplot(MultipleSampleDesign.AB.Equality.Reshaped,
+                                                      aes(x=Clinical.Response,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Clinical Response",
+                      limits=c(11,13),
+                      breaks=seq(11,13,by=0.5)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("Multiple-Sample Design : Test for Equality Between A Versus B"))
+
+##################################
+# Conducting a pairwise comparison
+# between Treatment A and C
+##################################
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_1))/(mu_CR-mu_AF))^2)
+ceiling(n_Beta30)
+z_Beta30=(mu_CR-mu_AF)/(sd*sqrt(2/n_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta30-qnorm(1-alpha/(2/tau))))
+
+beta_2=beta[2]
+(n_Beta20=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_2))/(mu_CR-mu_AF))^2)
+ceiling(n_Beta20)
+z_Beta20=(mu_CR-mu_AF)/(sd*sqrt(2/n_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta20-qnorm(1-alpha/(2/tau))))
+
+beta_3=beta[3]
+(n_Beta10=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_3))/(mu_CR-mu_AF))^2)
+ceiling(n_Beta10)
+z_Beta10=(mu_CR-mu_AF)/(sd*sqrt(2/n_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta10-qnorm(1-alpha/(2/tau))))
+
+MultipleSampleDesign.AC.Equality <- as.data.frame(cbind(mu_CR,n_Beta30,n_Beta20,n_Beta10))
+names(MultipleSampleDesign.AC.Equality) <- c("Clinical.Response",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+MultipleSampleDesign.AC.Equality.Reshaped <- gather(MultipleSampleDesign.AC.Equality,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+MultipleSampleDesign.AC.Equality.Reshaped$Label <- rep("MSDOWAP_AC_EQUALITY",nrow(MultipleSampleDesign.AC.Equality.Reshaped))
+
+MultipleSampleDesign.AC.Equality.Reshaped
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(MultipleSampleDesign.AC.Equality.PowerAnalysis <-    ggplot(MultipleSampleDesign.AC.Equality.Reshaped,
+                                                      aes(x=Clinical.Response,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Clinical Response",
+                      limits=c(15,17),
+                      breaks=seq(15,17,by=0.5)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("Multiple-Sample Design : Test for Equality Between A Versus C"))
+
+##################################
+# Conducting a pairwise comparison
+# between Treatment B and C
+##################################
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_1))/(mu_CR-mu_BF))^2)
+ceiling(n_Beta30)
+z_Beta30=(mu_CR-mu_BF)/(sd*sqrt(2/n_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta30-qnorm(1-alpha/(2/tau))))
+
+beta_2=beta[2]
+(n_Beta20=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_2))/(mu_CR-mu_BF))^2)
+ceiling(n_Beta20)
+z_Beta20=(mu_CR-mu_BF)/(sd*sqrt(2/n_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta20-qnorm(1-alpha/(2/tau))))
+
+beta_3=beta[3]
+(n_Beta10=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_3))/(mu_CR-mu_BF))^2)
+ceiling(n_Beta10)
+z_Beta10=(mu_CR-mu_BF)/(sd*sqrt(2/n_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta10-qnorm(1-alpha/(2/tau))))
+
+MultipleSampleDesign.BC.Equality <- as.data.frame(cbind(mu_CR,n_Beta30,n_Beta20,n_Beta10))
+names(MultipleSampleDesign.BC.Equality) <- c("Clinical.Response",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+MultipleSampleDesign.BC.Equality.Reshaped <- gather(MultipleSampleDesign.BC.Equality,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+MultipleSampleDesign.BC.Equality.Reshaped$Label <- rep("MSDOWAP_BC_EQUALITY",nrow(MultipleSampleDesign.BC.Equality.Reshaped))
+
+MultipleSampleDesign.BC.Equality.Reshaped
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(MultipleSampleDesign.BC.Equality.PowerAnalysis <-    ggplot(MultipleSampleDesign.BC.Equality.Reshaped,
+                                                      aes(x=Clinical.Response,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Clinical Response",
+                      limits=c(15,17),
+                      breaks=seq(15,17,by=0.5)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("Multiple-Sample Design : Test for Equality Between B Versus C"))
+
+```
 
 ###  1.3.2 Evaluation Summary
+|
+| Sample computation and power analysis comparison:
+|
+| **[A]** The minimum sample size required for the treatment group in a Multiple-Sample Design One-Way ANOVA Pairwise study is dependent upon the following factors defined and hypothesized prior to the clinical research:
+|      **[A.1]** Level of significance (Alpha) : Lower value increases sample size
+|      **[A.2]** Power of the test (Beta) : Higher value increases sample size
+|      **[A.3]** Data variability (Standard Deviation) : Higher value increases sample size
+|      **[A.4]** Epsilon (Difference between pairwise Mean Responses) : Lower value increases sample size
+|      **[A.5]** Tau (Number of treatment groups) : Higher value increases sample size
+| **[B]** Given the level of significance = 5%, standard deviation = 3.5, number of treatments = 3 and a varying range of clinical response values across pairwise combinations of treatments, the sample size is determined as the maximum number obtained for all computations -
+|      **[B.1]** 70% power, sample size = 24
+|      **[B.2]** 80% power, sample size = 32  
+|      **[B.3]** 90% power, sample size = 45  
+|
+```{r section_1.3.2, warning=FALSE, message=FALSE}
+
+##################################
+# Consolidating the power analyses charts
+##################################
+MSDOWAP.AB.Equality.PowerAnalysis <- ggplot(MultipleSampleDesign.AB.Equality.Reshaped,
+                                                      aes(x=Clinical.Response,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   facet_grid(. ~ Label) +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Clinical Response",
+                      limits=c(11,13),
+                      breaks=seq(11,13,by=0.5)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
+
+MSDOWAP.AC.Equality.PowerAnalysis <- ggplot(MultipleSampleDesign.AC.Equality.Reshaped,
+                                                      aes(x=Clinical.Response,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   facet_grid(. ~ Label) +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Clinical Response",
+                      limits=c(15,17),
+                      breaks=seq(15,17,by=0.5)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
+
+MSDOWAP.BC.Equality.PowerAnalysis <- ggplot(MultipleSampleDesign.BC.Equality.Reshaped,
+                                                      aes(x=Clinical.Response,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   facet_grid(. ~ Label) +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Clinical Response",
+                      limits=c(15,17),
+                      breaks=seq(15,17,by=0.5)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
+
+
+MSDOWAP_PowerAnalysis <- ggarrange(MSDOWAP.AB.Equality.PowerAnalysis,
+                                   MSDOWAP.AC.Equality.PowerAnalysis,
+                                   MSDOWAP.BC.Equality.PowerAnalysis,
+                                   ncol=2, nrow=2)
+
+annotate_figure(MSDOWAP_PowerAnalysis,
+                top = text_grob("Multiple-Sample Design One-Way ANOVA Power Analysis by Pairwise Comparison",
+                                color = "black",
+                                face = "bold",
+                                size = 14))
+
+```
 
 # **2. References**
 |
