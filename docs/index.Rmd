@@ -49,9 +49,9 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 |
 | **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For prevention of progression from osteopenia to osteoporosis, the study aims to demonstrate that the mean bone density post-treatment and pre-treatment are different. Given a level of significance of 0.05, evaluate the sample size range for a test of equality to achieve statistical test powers equal to 70%, 80% and 90%.
 |
-| **[Null Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density equals 0
+| **[Null Hypothesis]** Post-treatment mean bone density - Pre-treatment mean bone density equals 0
 |
-| **[Alternative Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density does not equal 0
+| **[Alternative Hypothesis]** Post-treatment mean bone density - Pre-treatment mean bone density does not equal 0
 |
 | **[Hypothesis Test]** Rejection of the null hypothesis implies difference between the mean bone density values post-treatment and pre-treatment
 |
@@ -177,9 +177,9 @@ OneSampleDesign.Equality.Reshaped
 |
 | **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For prevention of progression from osteopenia to osteoporosis, the study aims to demonstrate that the mean bone density post-treatment is not much worse than pre-treatment by a clinically meaningful difference equal to −0.5 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of non-inferiority to achieve statistical test powers equal to 70%, 80% and 90%.
 |
-| **[Null Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density <= Clinically meaningful difference
+| **[Null Hypothesis]** Post-treatment mean bone density - Pre-treatment mean bone density <= Clinically meaningful difference
 |
-| **[Alternative Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density > Clinically meaningful difference
+| **[Alternative Hypothesis]** Post-treatment mean bone density - Pre-treatment mean bone density > Clinically meaningful difference
 |
 | **[Hypothesis Test]** Rejection of the null hypothesis implies non-inferiority of the mean bone density treatment as compared to non-treatment, given the delta
 |
@@ -294,9 +294,9 @@ OneSampleDesign.NonInferiority.Reshaped
 |
 | **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For prevention of progression from osteopenia to osteoporosis, the study aims to demonstrate that the mean bone density post-treatment is much better than pre-treatment by a clinically meaningful difference equal to +0.10 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of superiority to achieve statistical test powers equal to 70%, 80% and 90%.
 |
-| **[Null Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density <= Clinically meaningful difference
+| **[Null Hypothesis]** Post-treatment mean bone density - Pre-treatment mean bone density <= Clinically meaningful difference
 |
-| **[Alternative Hypothesis]** Post-treatment mean bone density - Post-treatment mean bone density > Clinically meaningful difference
+| **[Alternative Hypothesis]** Post-treatment mean bone density - Pre-treatment mean bone density > Clinically meaningful difference
 |
 | **[Hypothesis Test]** Rejection of the null hypothesis implies non-inferiority of the mean bone density treatment as compared to non-treatment, given the delta
 |
@@ -411,9 +411,9 @@ OneSampleDesign.Superiority.Reshaped
 |
 | **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For a special investigation, the study aims to demonstrate that the mean bone density post-treatment is not much worse or better than pre-treatment by a clinically meaningful difference equal to +0.10 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of non-inferiority to achieve statistical test powers equal to 70%, 80% and 90%.
 |
-| **[Null Hypothesis]** Absolute value of (Post-treatment mean bone density - Post-treatment mean bone density) >= Clinically meaningful difference
+| **[Null Hypothesis]** Absolute value of (Post-treatment mean bone density - Pre-treatment mean bone density) >= Clinically meaningful difference
 |
-| **[Alternative Hypothesis]** Absolute value of (Post-treatment mean bone density - Post-treatment) mean bone density < Clinically meaningful difference
+| **[Alternative Hypothesis]** Absolute value of (Post-treatment mean bone density - Pre-treatment) mean bone density < Clinically meaningful difference
 |
 | **[Hypothesis Test]** Rejection of the null hypothesis implies equivalence of the mean bone density treatment as compared to non-treatment, given the delta
 |
