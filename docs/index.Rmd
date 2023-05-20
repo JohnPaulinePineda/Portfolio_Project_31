@@ -121,14 +121,14 @@ z_Beta30=(mu_Response-mu_Reference)/(sd/sqrt(n_Beta30))
 beta_2=beta[2]
 (n_Beta20=(sd*(qnorm(1-alpha/2)+qnorm(1-beta_2))/(mu_Response-mu_Reference))^2)
 ceiling(n_Beta20)
-z_Beta30=(mu_Response-mu_Reference)/(sd/sqrt(n_Beta20))
-(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/2))+pnorm(-z_Beta30-qnorm(1-alpha/2)))
+z_Beta20=(mu_Response-mu_Reference)/(sd/sqrt(n_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha/2))+pnorm(-z_Beta20-qnorm(1-alpha/2)))
 
 beta_3=beta[3]
 (n_Beta10=(sd*(qnorm(1-alpha/2)+qnorm(1-beta_3))/(mu_Response-mu_Reference))^2)
 ceiling(n_Beta10)
-z_Beta30=(mu_Response-mu_Reference)/(sd/sqrt(n_Beta10))
-(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/2))+pnorm(-z_Beta30-qnorm(1-alpha/2)))
+z_Beta10=(mu_Response-mu_Reference)/(sd/sqrt(n_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha/2))+pnorm(-z_Beta10-qnorm(1-alpha/2)))
 
 OneSampleDesign.Equality <- as.data.frame(cbind(mu_Response,n_Beta30,n_Beta20,n_Beta10))
 names(OneSampleDesign.Equality) <- c("Posttreatment.Mean.Bone.Density",
