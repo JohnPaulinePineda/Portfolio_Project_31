@@ -409,7 +409,7 @@ OneSampleDesign.Superiority.Reshaped
 
 ###  1.1.4 Test for Equivalence (OSD_EQUIVALENCE)
 |
-| **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For a special investigation, the study aims to demonstrate that the mean bone density post-treatment is not much worse or better than pre-treatment by a clinically meaningful difference equal to +0.10 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of non-inferiority to achieve statistical test powers equal to 70%, 80% and 90%.
+| **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For a special investigation, the study aims to demonstrate that the mean bone density post-treatment is not much worse or better than pre-treatment by a clinically meaningful difference equal to +0.10 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of equivalence to achieve statistical test powers equal to 70%, 80% and 90%.
 |
 | **[Null Hypothesis]** Absolute value of (Post-treatment mean bone density - Pre-treatment mean bone density) >= Clinically meaningful difference
 |
@@ -1029,7 +1029,7 @@ TwoSampleDesign.Superiority.Reshaped
 ###  1.2.4 Test for Equivalence (TSD_EQUIVALENCE)
 
 |
-| **[Research Question]** Suppose that a difference of 6 to 12% in percent change of LDL is hypothesized between two cholesterol lowering agents. The study aims to demonstrate that the mean LDL percent change for the first cholesterol lowering agent is not much worse or better than the second cholesterol lowering agent by a clinically meaningful difference equal to +5. Given a level of significance of 0.05, standard deviation of 10% and matching ratio between both groups equal to 1, evaluate the sample size range for a test of superiority to achieve statistical test powers equal to 70%, 80% and 90%.
+| **[Research Question]** Suppose that a difference of 6 to 12% in percent change of LDL is hypothesized between two cholesterol lowering agents. The study aims to demonstrate that the mean LDL percent change for the first cholesterol lowering agent is not much worse or better than the second cholesterol lowering agent by a clinically meaningful difference equal to +5. Given a level of significance of 0.05, standard deviation of 10% and matching ratio between both groups equal to 1, evaluate the sample size range for a test of equivalence to achieve statistical test powers equal to 70%, 80% and 90%.
 |
 | **[Null Hypothesis]** Absolute value of (Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent change) >= Clinically meaningful difference
 |
