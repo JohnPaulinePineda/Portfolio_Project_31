@@ -763,7 +763,7 @@ TwoSampleDesign.Equality.Reshaped <- gather(TwoSampleDesign.Equality,
                                             "Power=70%","Power=80%","Power=90%",
                                             key="Power",
                                             value="Sample.Size")
-TwoSampleDesign.Equality.Reshaped$Label <- rep("OSD_EQUALITY",nrow(TwoSampleDesign.Equality.Reshaped))
+TwoSampleDesign.Equality.Reshaped$Label <- rep("TSD_EQUALITY",nrow(TwoSampleDesign.Equality.Reshaped))
 
 TwoSampleDesign.Equality.Reshaped
 
@@ -880,7 +880,7 @@ TwoSampleDesign.NonInferiority.Reshaped <- gather(TwoSampleDesign.NonInferiority
                                             "Power=70%","Power=80%","Power=90%",
                                             key="Power",
                                             value="Sample.Size")
-TwoSampleDesign.NonInferiority.Reshaped$Label <- rep("OSD_NONINFERIORITY",nrow(TwoSampleDesign.NonInferiority.Reshaped))
+TwoSampleDesign.NonInferiority.Reshaped$Label <- rep("TSD_NONINFERIORITY",nrow(TwoSampleDesign.NonInferiority.Reshaped))
 
 TwoSampleDesign.NonInferiority.Reshaped
 
@@ -997,7 +997,7 @@ TwoSampleDesign.Superiority.Reshaped <- gather(TwoSampleDesign.Superiority,
                                             "Power=70%","Power=80%","Power=90%",
                                             key="Power",
                                             value="Sample.Size")
-TwoSampleDesign.Superiority.Reshaped$Label <- rep("OSD_SUPERIORITY",nrow(TwoSampleDesign.Superiority.Reshaped))
+TwoSampleDesign.Superiority.Reshaped$Label <- rep("TSD_SUPERIORITY",nrow(TwoSampleDesign.Superiority.Reshaped))
 
 TwoSampleDesign.Superiority.Reshaped
 
@@ -1115,7 +1115,7 @@ TwoSampleDesign.Equivalence.Reshaped <- gather(TwoSampleDesign.Equivalence,
                                             "Power=70%","Power=80%","Power=90%",
                                             key="Power",
                                             value="Sample.Size")
-TwoSampleDesign.Equivalence.Reshaped$Label <- rep("OSD_EQUIVALENCE",nrow(TwoSampleDesign.Equivalence.Reshaped))
+TwoSampleDesign.Equivalence.Reshaped$Label <- rep("TSD_EQUIVALENCE",nrow(TwoSampleDesign.Equivalence.Reshaped))
 
 TwoSampleDesign.Equivalence.Reshaped
 
