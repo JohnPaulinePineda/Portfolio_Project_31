@@ -1312,11 +1312,11 @@ annotate_figure(TSD_PowerAnalysis,
 |
 | **[D]** <span style="color: #FF0000">Standard Deviation</span> : 3.50
 |
-| **[D]** <span style="color: #FF0000">Alpha</span> : 0.05
+| **[E]** <span style="color: #FF0000">Alpha</span> : 0.05
 |
-| **[E]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
+| **[F]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
 |
-| **[F]** <span style="color: #FF0000">Tau</span> : 3 representing the number of treatments
+| **[G]** <span style="color: #FF0000">Tau</span> : 3 representing the number of treatments
 |
 ```{r section_1.3.1, warning=FALSE, message=FALSE}
 
