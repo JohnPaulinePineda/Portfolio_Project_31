@@ -67,6 +67,10 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 |
 | **[F]** <span style="color: #FF0000">Delta</span> : 0 testing margin for the Test of Equality hypothesis
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.1.1, warning=FALSE, message=FALSE}
 
 ##################################
@@ -173,6 +177,8 @@ OneSampleDesign.Equality.Reshaped
 
 ```
 
+</details>
+
 ###  1.1.2 Test for Non-Inferiority (OSD_NONINFERIORITY)
 |
 | **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For prevention of progression from osteopenia to osteoporosis, the study aims to demonstrate that the mean bone density post-treatment is not much worse than pre-treatment by a clinically meaningful difference equal to −0.5 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of non-inferiority to achieve statistical test powers equal to 70%, 80% and 90%.
@@ -195,6 +201,10 @@ OneSampleDesign.Equality.Reshaped
 |
 | **[F]** <span style="color: #FF0000">Delta</span> : -0.50 SD testing margin for the Test of Non-Inferiority hypothesis
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.1.2, warning=FALSE, message=FALSE}
 ##################################
 # Defining a range of possible hypothesized values for mu_Response
@@ -290,6 +300,8 @@ OneSampleDesign.NonInferiority.Reshaped
 
 ```
 
+</details>
+
 ###  1.1.3 Test for Superiority (OSD_SUPERIORITY)
 |
 | **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For prevention of progression from osteopenia to osteoporosis, the study aims to demonstrate that the mean bone density post-treatment is much better than pre-treatment by a clinically meaningful difference equal to +0.10 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of superiority to achieve statistical test powers equal to 70%, 80% and 90%.
@@ -312,6 +324,10 @@ OneSampleDesign.NonInferiority.Reshaped
 |
 | **[F]** <span style="color: #FF0000">Delta</span> : +0.10 SD testing margin for the Test of Superiority hypothesis
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.1.3, warning=FALSE, message=FALSE}
 ##################################
 # Defining a range of possible hypothesized values for mu_Response
@@ -407,6 +423,8 @@ OneSampleDesign.Superiority.Reshaped
 
 ```
 
+</details>
+
 ###  1.1.4 Test for Equivalence (OSD_EQUIVALENCE)
 |
 | **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For a special investigation, the study aims to demonstrate that the mean bone density post-treatment is not much worse or better than pre-treatment by a clinically meaningful difference equal to +0.10 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of equivalence to achieve statistical test powers equal to 70%, 80% and 90%.
@@ -429,6 +447,10 @@ OneSampleDesign.Superiority.Reshaped
 |
 | **[F]** <span style="color: #FF0000">Delta</span> : +0.10 SD testing margin for the Test of Equivalence hypothesis
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.1.4, warning=FALSE, message=FALSE}
 ##################################
 # Defining a range of possible hypothesized values for mu_Response
@@ -525,6 +547,8 @@ OneSampleDesign.Equivalence.Reshaped
 
 ```
 
+</details>
+
 ###  1.1.5 Evaluation Summary
 |
 | Sample computation and power analysis comparison:
@@ -554,6 +578,10 @@ OneSampleDesign.Equivalence.Reshaped
 |             **[B.4.2]** For 80% power, sample size = 2 to 54 
 |             **[B.4.3]** For 90% power, sample size = 2 to 68 
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.1.5, warning=FALSE, message=FALSE}
 ##################################
 # Consolidating the power analyses charts
@@ -653,6 +681,8 @@ annotate_figure(OSD_PowerAnalysis,
 
 ```
 
+</details>
+
 ##  1.2 Two-Sample Design (TSD)
 |
 | [Two-Sample Design](https://www.taylorfrancis.com/books/mono/10.1201/9781315183084/sample-size-calculations-clinical-research-shein-chung-chow-jun-shao-hansheng-wang-yuliya-lokhnygina) involves individual numeric response values from sampled subjects between treatment and control groups, or between two competing groups. In clinical research, responses could be between a test drug and a placebo control or an active control agent; or between two competing agents. Responses are assumed to be independent normal random variables with zero mean and a given pooled variance. Parameters needed for the computations are as follows:
@@ -702,6 +732,10 @@ annotate_figure(OSD_PowerAnalysis,
 |
 | **[F]** <span style="color: #FF0000">Delta</span> : 0 testing margin for the Test of Equality hypothesis
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.2.1, warning=FALSE, message=FALSE}
 
 ##################################
@@ -792,6 +826,8 @@ TwoSampleDesign.Equality.Reshaped
 
 ```
 
+</details>
+
 ###  1.2.2 Test for Non-Inferiority (TSD_NONINFERIORITY)
 |
 | **[Research Question]** Suppose that a difference of 6 to 12% in percent change of LDL is hypothesized between two cholesterol lowering agents. The study aims to demonstrate that the mean LDL percent change for the first cholesterol lowering agent is not much worse than the second cholesterol lowering agent by a clinically meaningful difference equal to −5. Given a level of significance of 0.05, standard deviation of 10% and matching ratio between both groups equal to 1, evaluate the sample size range for a test of non-inferiority to achieve statistical test powers equal to 70%, 80% and 90%.
@@ -814,6 +850,10 @@ TwoSampleDesign.Equality.Reshaped
 |
 | **[F]** <span style="color: #FF0000">Delta</span> : -5 testing margin for the Test of Non-Inferiority hypothesis
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.2.2, warning=FALSE, message=FALSE}
 
 ##################################
@@ -909,6 +949,8 @@ TwoSampleDesign.NonInferiority.Reshaped
 
 ```
 
+</details>
+
 ###  1.2.3 Test for Superiority (TSD_SUPERIORITY)
 |
 | **[Research Question]** Suppose that a difference of 6 to 12% in percent change of LDL is hypothesized between two cholesterol lowering agents. The study aims to demonstrate that the mean LDL percent change for the first cholesterol lowering agent is much better than the second cholesterol lowering agent by a clinically meaningful difference equal to +5. Given a level of significance of 0.05, standard deviation of 10% and matching ratio between both groups equal to 1, evaluate the sample size range for a test of superiority to achieve statistical test powers equal to 70%, 80% and 90%.
@@ -931,6 +973,10 @@ TwoSampleDesign.NonInferiority.Reshaped
 |
 | **[F]** <span style="color: #FF0000">Delta</span> : +1 testing margin for the Test of Superiority hypothesis
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.2.3, warning=FALSE, message=FALSE}
 
 ##################################
@@ -1026,6 +1072,8 @@ TwoSampleDesign.Superiority.Reshaped
 
 ```
 
+</details>
+
 ###  1.2.4 Test for Equivalence (TSD_EQUIVALENCE)
 
 |
@@ -1049,6 +1097,10 @@ TwoSampleDesign.Superiority.Reshaped
 |
 | **[F]** <span style="color: #FF0000">Delta</span> : +1 testing margin for the Test of Equivalence hypothesis
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.2.4, warning=FALSE, message=FALSE}
 
 ##################################
@@ -1144,6 +1196,8 @@ TwoSampleDesign.Equivalence.Reshaped
 
 ```
 
+</details>
+
 ###  1.2.5 Evaluation Summary
 |
 | Sample computation and power analysis comparison:
@@ -1173,6 +1227,10 @@ TwoSampleDesign.Equivalence.Reshaped
 |             **[B.4.2]** For 80% power, sample size = 15 to 69 
 |             **[B.4.3]** For 90% power, sample size = 18 to 87 
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.2.5, warning=FALSE, message=FALSE}
 
 ##################################
@@ -1272,6 +1330,8 @@ annotate_figure(TSD_PowerAnalysis,
 
 ```
 
+</details>
+
 ##  1.3 Multiple-Sample Design One-Way ANOVA Pairwise (MSDOWAP)
 |
 | [Multiple-Sample Design One-Way ANOVA Pairwise](https://www.taylorfrancis.com/books/mono/10.1201/9781315183084/sample-size-calculations-clinical-research-shein-chung-chow-jun-shao-hansheng-wang-yuliya-lokhnygina) involves individual numeric response values from sampled subjects across three or more competing treatment groups. In clinical research, responses could be between multiple test drugs and a placebo control or an active control agent; or between multiple competing agents. The response and treatment variables are modeled using a One-Way ANOVA model involving the fixed effect of the treatment and random errors which are assumed to be independent and identically distributed normal random variables with zero mean and a given variance. For a pairwise comparison between treatments, all possible combinations must be analyzed. Due to the multiple comparisons inflating the Type I error, adjustments arre made for controlling the overall Type I error rate at the desired significance level. Parameters needed for the computations are as follows:
@@ -1318,6 +1378,10 @@ annotate_figure(TSD_PowerAnalysis,
 |
 | **[G]** <span style="color: #FF0000">Tau</span> : 3 representing the number of treatments
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.3.1, warning=FALSE, message=FALSE}
 
 ##################################
@@ -1560,6 +1624,8 @@ MultipleSampleDesign.BC.Equality.Reshaped
 
 ```
 
+</details>
+
 ###  1.3.2 Evaluation Summary
 |
 | Sample computation and power analysis comparison:
@@ -1575,6 +1641,10 @@ MultipleSampleDesign.BC.Equality.Reshaped
 |      **[B.2]** 80% power, sample size = 32  
 |      **[B.3]** 90% power, sample size = 45  
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.3.2, warning=FALSE, message=FALSE}
 
 ##################################
@@ -1653,6 +1723,8 @@ annotate_figure(MSDOWAP_PowerAnalysis,
                                 size = 14))
 
 ```
+
+</details>
 
 # **2. References**
 |
