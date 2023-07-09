@@ -1,5 +1,5 @@
 ---
-title: "R : Sample Size and Power Calculations for Tests Comparing Means in Clinical Research"
+title: "Statistical Evaluation : Sample Size and Power Calculations for Tests Comparing Means in Clinical Research"
 author: "John Pauline Pineda"
 date: "May 7, 2023"
 output: 
