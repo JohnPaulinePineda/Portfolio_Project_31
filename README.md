@@ -4,4 +4,4 @@
 
 This [project](https://johnpaulinepineda.github.io/Portfolio_Project_31/) explores the various sample size and power calculations for mean comparison tests in clinical research. The important factors to be assessed prior to determining the appropriate sample sizes were evaluated for the One-Sample, Two-Sample and Multiple-Sample One-Way ANOVA Pairwise Designs. Power analyses were conducted to address the requirements across different study hypotheses including Tests of Equality, Non-Inferiority, Superiority and Equivalence.
 
-<img src="docs/Project31_Summary.png?raw=true"/>
+<img src="images/Project31_Summary.png?raw=true"/>
