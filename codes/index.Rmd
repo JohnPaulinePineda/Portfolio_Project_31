@@ -1,0 +1,1755 @@
+---
+title: "Statistical Evaluation : Sample Size and Power Calculations for Tests Comparing Means in Clinical Research"
+author: "John Pauline Pineda"
+date: "May 7, 2023"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    theme: readable
+    highlight: tango
+    css: doc.css
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
+```
+
+# **1. Table of Contents**
+|
+| This project explores different sample size and power calculations for mean comparison tests in clinical research using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>. The important factors to be assessed prior to determining the appropriate sample sizes were evaluated for the **One-Sample**, **Two-Sample** and **Multiple-Sample One-Way ANOVA Pairwise** designs. Power analyses were conducted to address the requirements across different study hypotheses including Tests of Equality, Non-Inferiority, Superiority and Equivalence. All results were consolidated in a [<span style="color: #FF0000">**Summary**</span>](#summary) presented at the end of the document.
+|
+| Mean comparison tests applied during clinical research refer to trials evaluated in terms of mean responses of certain primary study endpoints. The objectives of the intended clinical trials usually include the evaluation of intervention effects, demonstration of therapeutic equivalence or non-inferiority and establishment of superiority. The equations applied in this study (mostly contained from the book  <mark style="background-color: #CCECFF">**Sample Size Calculations in Clinical Research**</mark> and implemented using the <mark style="background-color: #CCECFF">**base**</mark> package) attempt to provide calculations for the sample size and statistical power based on the study objectives and hypotheses of interest. 
+|
+##  1.1 One-Sample Design (OSD)
+|
+| [One-Sample Design](https://www.taylorfrancis.com/books/mono/10.1201/9781315183084/sample-size-calculations-clinical-research-shein-chung-chow-jun-shao-hansheng-wang-yuliya-lokhnygina) involves individual numeric response values from sampled subjects. In clinical research, responses could be the difference between matched pairs such as the pre-treatment and post-treatment responses or changes from baseline to endpoint within a treatment group. Responses are assumed to be independent and identically distributed normal random variables with zero mean and a given variance. Parameters needed for the computations are as follows:
+|
+| **[A]** <span style="color: #FF0000">Mean Response</span> : True mean response value obtained from sampled subjects 
+|
+| **[B]** <span style="color: #FF0000">Reference</span> : Baseline value for comparison
+|
+| **[C]** <span style="color: #FF0000">Standard Deviation</span> : Data variability based from literature, pilot studies or preliminary experiments
+|
+| **[D]** <span style="color: #FF0000">Alpha</span> : Maximum allowed Type I error
+|
+| **[E]** <span style="color: #FF0000">Beta</span> : Maximum allowed Type II error
+|
+| **[F]** <span style="color: #FF0000">Delta</span> : 
+|      **[F.1]** Minimum testing margin to establish that the mean response is much better than reference
+|      **[F.2]** Minimum testing margin to establish that the mean response is not much worse as the reference
+|      **[F.3]** Minimum testing margin to establish that the mean response is no better and no worse than the reference
+|
+| A case scenario was provided as follows to demonstrate sample size computation and power analysis as applied on different types of hypotheses:
+|
+| **[Case Scenario]** A clinical research study is being pursued concerning osteoporosis in post-menopausal women. Osteoporosis and osteopenia (or decreased bone mass) most commonly develop in post-menopausal women. The consequences of osteoporosis are vertebral crush fractures and hip fractures. The diagnosis of osteoporosis is made when vertebral bone density is more than 10% below what is expected for sex, age, height, weight, and race. Usually, bone density is reported in terms of standard deviation (SD) from mean values. The World Health Organization (WHO) defines osteopenia as bone density value greater than one SD below peak bone mass levels in young women and osteoporosis as a value of greater than 2.5 SD below the same measurement scale. In medical practice, most clinicians suggest therapeutic intervention should be begun in patients with osteopenia to prevent progression to osteoporosis.
+|
+###  1.1.1 Test for Equality (OSD_EQUALITY)
+|
+| **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For prevention of progression from osteopenia to osteoporosis, the study aims to demonstrate that the mean bone density post-treatment and pre-treatment are different. Given a level of significance of 0.05, evaluate the sample size range for a test of equality to achieve statistical test powers equal to 70%, 80% and 90%.
+|
+| **[Null Hypothesis]** Post-treatment mean bone density - Pre-treatment mean bone density equals 0
+|
+| **[Alternative Hypothesis]** Post-treatment mean bone density - Pre-treatment mean bone density does not equal 0
+|
+| **[Hypothesis Test]** Rejection of the null hypothesis implies difference between the mean bone density values post-treatment and pre-treatment
+|
+| **[A]** <span style="color: #FF0000">Mean Response</span> : 2.0 to 4.0 SD at 0.20 intervals 
+|
+| **[B]** <span style="color: #FF0000">Reference</span> : 1.5 SD
+|
+| **[C]** <span style="color: #FF0000">Standard Deviation</span> : Not explicitly given but already factored into the mean values and will cancel out during computation
+|
+| **[D]** <span style="color: #FF0000">Alpha</span> : 0.05
+|
+| **[E]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
+|
+| **[F]** <span style="color: #FF0000">Delta</span> : 0 testing margin for the Test of Equality hypothesis
+|
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
+```{r section_1.1.1, warning=FALSE, message=FALSE}
+
+##################################
+# Loading R libraries
+##################################
+library(moments)
+library(car)
+library(multcomp)
+library(effects)
+library(psych)
+library(ggplot2)
+library(dplyr)
+library(ggpubr)
+library(rstatix)
+library(ggfortify)
+library(trend)
+
+##################################
+# Defining a range of possible hypothesized values for mu_Response
+##################################
+mu_Response=seq(2.0,4.0,0.2)
+
+##################################
+# Defining a fixed hypothesized value for mu_Reference
+##################################
+mu_Reference=1.5
+
+##################################
+# Defining a fixed hypothesized value for the standard deviation
+##################################
+sd=1
+
+##################################
+# Defining a fixed hypothesized value for the Type I error
+##################################
+alpha=0.05
+
+##################################
+# Defining a range of possible hypothesized values for the Type II error
+##################################
+beta=c(0.30,0.20,0.10)
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=(sd*(qnorm(1-alpha/2)+qnorm(1-beta_1))/(mu_Response-mu_Reference))^2)
+ceiling(n_Beta30)
+z_Beta30=(mu_Response-mu_Reference)/(sd/sqrt(n_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/2))+pnorm(-z_Beta30-qnorm(1-alpha/2)))
+
+beta_2=beta[2]
+(n_Beta20=(sd*(qnorm(1-alpha/2)+qnorm(1-beta_2))/(mu_Response-mu_Reference))^2)
+ceiling(n_Beta20)
+z_Beta20=(mu_Response-mu_Reference)/(sd/sqrt(n_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha/2))+pnorm(-z_Beta20-qnorm(1-alpha/2)))
+
+beta_3=beta[3]
+(n_Beta10=(sd*(qnorm(1-alpha/2)+qnorm(1-beta_3))/(mu_Response-mu_Reference))^2)
+ceiling(n_Beta10)
+z_Beta10=(mu_Response-mu_Reference)/(sd/sqrt(n_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha/2))+pnorm(-z_Beta10-qnorm(1-alpha/2)))
+
+OneSampleDesign.Equality <- as.data.frame(cbind(mu_Response,n_Beta30,n_Beta20,n_Beta10))
+names(OneSampleDesign.Equality) <- c("Posttreatment.Mean.Bone.Density",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+OneSampleDesign.Equality.Reshaped <- gather(OneSampleDesign.Equality,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+OneSampleDesign.Equality.Reshaped$Label <- rep("OSD_EQUALITY",nrow(OneSampleDesign.Equality.Reshaped))
+
+OneSampleDesign.Equality.Reshaped
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(OneSampleDesign.Equality.PowerAnalysis <- ggplot(OneSampleDesign.Equality.Reshaped,
+                                                      aes(x=Posttreatment.Mean.Bone.Density,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Post-Treatment Mean Bone Density",
+                      limits=c(2,4),
+                      breaks=seq(2,4,
+                                 by=0.2)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("One-Sample Design : Test for Equality"))
+
+```
+
+</details>
+
+###  1.1.2 Test for Non-Inferiority (OSD_NONINFERIORITY)
+|
+| **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For prevention of progression from osteopenia to osteoporosis, the study aims to demonstrate that the mean bone density post-treatment is not much worse than pre-treatment by a clinically meaningful difference equal to −0.5 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of non-inferiority to achieve statistical test powers equal to 70%, 80% and 90%.
+|
+| **[Null Hypothesis]** Post-treatment mean bone density - Pre-treatment mean bone density <= Clinically meaningful difference
+|
+| **[Alternative Hypothesis]** Post-treatment mean bone density - Pre-treatment mean bone density > Clinically meaningful difference
+|
+| **[Hypothesis Test]** Rejection of the null hypothesis implies non-inferiority of the mean bone density treatment as compared to non-treatment, given the delta
+|
+| **[A]** <span style="color: #FF0000">Mean Response</span> : 2.0 to 4.0 SD at 0.20 intervals 
+|
+| **[B]** <span style="color: #FF0000">Reference</span> : 1.5 SD
+|
+| **[C]** <span style="color: #FF0000">Standard Deviation</span> : Not explicitly given but already factored into the mean values and will cancel out during computation
+|
+| **[D]** <span style="color: #FF0000">Alpha</span> : 0.05
+|
+| **[E]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
+|
+| **[F]** <span style="color: #FF0000">Delta</span> : -0.50 SD testing margin for the Test of Non-Inferiority hypothesis
+|
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
+```{r section_1.1.2, warning=FALSE, message=FALSE}
+##################################
+# Defining a range of possible hypothesized values for mu_Response
+##################################
+mu_Response=seq(2.0,4.0,0.2)
+
+##################################
+# Defining a fixed hypothesized value for mu_Reference
+##################################
+mu_Reference=1.5
+
+##################################
+# Defining a fixed hypothesized value for the standard deviation
+##################################
+sd=1
+
+##################################
+# Defining a fixed hypothesized value for the Type I error
+##################################
+alpha=0.05
+
+##################################
+# Defining a range of possible hypothesized values for the Type II error
+##################################
+beta=c(0.30,0.20,0.10)
+
+##################################
+# Defining the non-inferiority delta
+##################################
+delta=-0.50
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=(sd*(qnorm(1-alpha)+qnorm(1-beta_1))/(mu_Response-mu_Reference-delta))^2)
+ceiling(n_Beta30)
+z_Beta30=(mu_Response-mu_Reference-delta)/(sd/sqrt(n_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha))+pnorm(-z_Beta30-qnorm(1-alpha)))
+
+beta_2=beta[2]
+(n_Beta20=(sd*(qnorm(1-alpha)+qnorm(1-beta_2))/(mu_Response-mu_Reference-delta))^2)
+ceiling(n_Beta20)
+z_Beta20=(mu_Response-mu_Reference-delta)/(sd/sqrt(n_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha))+pnorm(-z_Beta20-qnorm(1-alpha)))
+
+beta_3=beta[3]
+(n_Beta10=(sd*(qnorm(1-alpha)+qnorm(1-beta_3))/(mu_Response-mu_Reference-delta))^2)
+ceiling(n_Beta10)
+z_Beta10=(mu_Response-mu_Reference-delta)/(sd/sqrt(n_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha))+pnorm(-z_Beta10-qnorm(1-alpha)))
+
+OneSampleDesign.NonInferiority <- as.data.frame(cbind(mu_Response,n_Beta30,n_Beta20,n_Beta10))
+names(OneSampleDesign.NonInferiority) <- c("Posttreatment.Mean.Bone.Density",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+OneSampleDesign.NonInferiority.Reshaped <- gather(OneSampleDesign.NonInferiority,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+OneSampleDesign.NonInferiority.Reshaped$Label <- rep("OSD_NONINFERIORITY",nrow(OneSampleDesign.NonInferiority.Reshaped))
+
+OneSampleDesign.NonInferiority.Reshaped
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(OneSampleDesign.NonInferiority.PowerAnalysis <-ggplot(OneSampleDesign.NonInferiority.Reshaped,
+                                                      aes(x=Posttreatment.Mean.Bone.Density,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Post-Treatment Mean Bone Density",
+                      limits=c(2,4),
+                      breaks=seq(2,4,
+                                 by=0.2)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("One-Sample Design : Test for Non-Inferiority"))
+
+```
+
+</details>
+
+###  1.1.3 Test for Superiority (OSD_SUPERIORITY)
+|
+| **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For prevention of progression from osteopenia to osteoporosis, the study aims to demonstrate that the mean bone density post-treatment is much better than pre-treatment by a clinically meaningful difference equal to +0.10 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of superiority to achieve statistical test powers equal to 70%, 80% and 90%.
+|
+| **[Null Hypothesis]** Post-treatment mean bone density - Pre-treatment mean bone density <= Clinically meaningful difference
+|
+| **[Alternative Hypothesis]** Post-treatment mean bone density - Pre-treatment mean bone density > Clinically meaningful difference
+|
+| **[Hypothesis Test]** Rejection of the null hypothesis implies non-inferiority of the mean bone density treatment as compared to non-treatment, given the delta
+|
+| **[A]** <span style="color: #FF0000">Mean Response</span> : 2.0 to 4.0 SD at 0.20 intervals 
+|
+| **[B]** <span style="color: #FF0000">Reference</span> : 1.5 SD
+|
+| **[C]** <span style="color: #FF0000">Standard Deviation</span> : Not explicitly given but already factored into the mean values and will cancel out during computation
+|
+| **[D]** <span style="color: #FF0000">Alpha</span> : 0.05
+|
+| **[E]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
+|
+| **[F]** <span style="color: #FF0000">Delta</span> : +0.10 SD testing margin for the Test of Superiority hypothesis
+|
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
+```{r section_1.1.3, warning=FALSE, message=FALSE}
+##################################
+# Defining a range of possible hypothesized values for mu_Response
+##################################
+mu_Response=seq(2.0,4.0,0.2)
+
+##################################
+# Defining a fixed hypothesized value for mu_Reference
+##################################
+mu_Reference=1.5
+
+##################################
+# Defining a fixed hypothesized value for the standard deviation
+##################################
+sd=1
+
+##################################
+# Defining a fixed hypothesized value for the Type I error
+##################################
+alpha=0.05
+
+##################################
+# Defining a range of possible hypothesized values for the Type II error
+##################################
+beta=c(0.30,0.20,0.10)
+
+##################################
+# Defining the superiority delta
+##################################
+delta= 0.10
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=(sd*(qnorm(1-alpha)+qnorm(1-beta_1))/(mu_Response-mu_Reference-delta))^2)
+ceiling(n_Beta30)
+z_Beta30=(mu_Response-mu_Reference-delta)/(sd/sqrt(n_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha))+pnorm(-z_Beta30-qnorm(1-alpha)))
+
+beta_2=beta[2]
+(n_Beta20=(sd*(qnorm(1-alpha)+qnorm(1-beta_2))/(mu_Response-mu_Reference-delta))^2)
+ceiling(n_Beta20)
+z_Beta20=(mu_Response-mu_Reference-delta)/(sd/sqrt(n_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha))+pnorm(-z_Beta20-qnorm(1-alpha)))
+
+beta_3=beta[3]
+(n_Beta10=(sd*(qnorm(1-alpha)+qnorm(1-beta_3))/(mu_Response-mu_Reference-delta))^2)
+ceiling(n_Beta10)
+z_Beta10=(mu_Response-mu_Reference-delta)/(sd/sqrt(n_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha))+pnorm(-z_Beta10-qnorm(1-alpha)))
+
+OneSampleDesign.Superiority <- as.data.frame(cbind(mu_Response,n_Beta30,n_Beta20,n_Beta10))
+names(OneSampleDesign.Superiority) <- c("Posttreatment.Mean.Bone.Density",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+OneSampleDesign.Superiority.Reshaped <- gather(OneSampleDesign.Superiority,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+OneSampleDesign.Superiority.Reshaped$Label <- rep("OSD_SUPERIORITY",nrow(OneSampleDesign.Superiority.Reshaped))
+
+OneSampleDesign.Superiority.Reshaped
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(OneSampleDesign.Superiority.PowerAnalysis <- ggplot(OneSampleDesign.Superiority.Reshaped,
+                                                      aes(x=Posttreatment.Mean.Bone.Density,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Post-Treatment Mean Bone Density",
+                      limits=c(2,4),
+                      breaks=seq(2,4,
+                                 by=0.2)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("One-Sample Design : Test for Superiority"))
+
+```
+
+</details>
+
+###  1.1.4 Test for Equivalence (OSD_EQUIVALENCE)
+|
+| **[Research Question]** Suppose that the mean bone density before the treatment is 1.5 SD. After treatment, the mean value is expected to range from 2.0 to 4.0 SD with increments of 0.2. For a special investigation, the study aims to demonstrate that the mean bone density post-treatment is not much worse or better than pre-treatment by a clinically meaningful difference equal to +0.10 SD. Given a level of significance of 0.05, evaluate the sample size range for a test of equivalence to achieve statistical test powers equal to 70%, 80% and 90%.
+|
+| **[Null Hypothesis]** Absolute value of (Post-treatment mean bone density - Pre-treatment mean bone density) >= Clinically meaningful difference
+|
+| **[Alternative Hypothesis]** Absolute value of (Post-treatment mean bone density - Pre-treatment) mean bone density < Clinically meaningful difference
+|
+| **[Hypothesis Test]** Rejection of the null hypothesis implies equivalence of the mean bone density treatment as compared to non-treatment, given the delta
+|
+| **[A]** <span style="color: #FF0000">Mean Response</span> : 2.0 to 4.0 SD at 0.20 intervals 
+|
+| **[B]** <span style="color: #FF0000">Reference</span> : 1.5 SD
+|
+| **[C]** <span style="color: #FF0000">Standard Deviation</span> : Not explicitly given but already factored into the mean values and will cancel out during computation
+|
+| **[D]** <span style="color: #FF0000">Alpha</span> : 0.05
+|
+| **[E]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
+|
+| **[F]** <span style="color: #FF0000">Delta</span> : +0.10 SD testing margin for the Test of Equivalence hypothesis
+|
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
+```{r section_1.1.4, warning=FALSE, message=FALSE}
+##################################
+# Defining a range of possible hypothesized values for mu_Response
+##################################
+mu_Response=seq(2.0,4.0,0.2)
+
+##################################
+# Defining a fixed hypothesized value for mu_Reference
+##################################
+mu_Reference=1.5
+
+##################################
+# Defining a fixed hypothesized value for the standard deviation
+##################################
+sd=1
+
+##################################
+# Defining a fixed hypothesized value for the Type I error
+##################################
+alpha=0.05
+
+##################################
+# Defining a range of possible hypothesized values for the Type II error
+##################################
+beta=c(0.30,0.20,0.10)
+
+##################################
+# Defining the equivalence delta
+##################################
+delta= 0.10
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=(sd*(qnorm(1-alpha)+qnorm(1-beta_1/2))/(delta-abs(mu_Response-mu_Reference)))^2)
+ceiling(n_Beta30)
+z_Beta30=(abs(mu_Response-mu_Reference)-delta)/(sd/sqrt(n_Beta30))
+(Power_Beta30=2*(pnorm(z_Beta30-qnorm(1-alpha))+pnorm(-z_Beta30-qnorm(1-alpha)))-1)
+
+beta_2=beta[2]
+(n_Beta20=(sd*(qnorm(1-alpha)+qnorm(1-beta_2/2))/(delta-abs(mu_Response-mu_Reference)))^2)
+ceiling(n_Beta20)
+z_Beta20=(abs(mu_Response-mu_Reference)-delta)/(sd/sqrt(n_Beta20))
+(Power_Beta20=2*(pnorm(z_Beta20-qnorm(1-alpha))+pnorm(-z_Beta20-qnorm(1-alpha)))-1)
+(Power_Beta20=2*(pnorm(z_Beta20-qnorm(alpha)))-1)
+
+beta_3=beta[3]
+(n_Beta10=(sd*(qnorm(1-alpha)+qnorm(1-beta_3/2))/(delta-abs(mu_Response-mu_Reference)))^2)
+ceiling(n_Beta10)
+z_Beta10=(abs(mu_Response-mu_Reference)-delta)/(sd/sqrt(n_Beta10))
+(Power_Beta10=2*(pnorm(z_Beta10-qnorm(1-alpha))+pnorm(-z_Beta10-qnorm(1-alpha)))-1)
+
+OneSampleDesign.Equivalence <- as.data.frame(cbind(mu_Response,n_Beta30,n_Beta20,n_Beta10))
+names(OneSampleDesign.Equivalence) <- c("Posttreatment.Mean.Bone.Density",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+OneSampleDesign.Equivalence.Reshaped <- gather(OneSampleDesign.Equivalence,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+OneSampleDesign.Equivalence.Reshaped$Label <- rep("OSD_EQUIVALENCE",nrow(OneSampleDesign.Equivalence.Reshaped))
+
+OneSampleDesign.Equivalence.Reshaped
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(OneSampleDesign.Equivalence.PowerAnalysis <- ggplot(OneSampleDesign.Equivalence.Reshaped,
+                                                      aes(x=Posttreatment.Mean.Bone.Density,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Post-Treatment Mean Bone Density",
+                      limits=c(2,4),
+                      breaks=seq(2,4,
+                                 by=0.2)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("One-Sample Design : Test for Equivalence"))
+
+```
+
+</details>
+
+###  1.1.5 Consolidated Evaluation
+|
+| **[A]** The minimum sample size required for the treatment group in a One-Sample Design study is dependent upon the following factors defined and hypothesized prior to the clinical research:
+|      **[A.1]** **Study Hypothesis** (Equality, Non-Inferiority, Superiority, Equivalence)
+|      **[A.2]** **Level of significance** (Alpha) : Lower value increases sample size
+|      **[A.3]** **Power of the test** (Beta) : Higher value increases sample size
+|      **[A.4]** **Data variability** (Standard Deviation) : Higher value increases sample size
+|      **[A.5]** **Epsilon** (Difference between Mean Response and Reference) : Lower value increases sample size
+|      **[A.6]** **Delta** (Testing margin, as applicable) : Higher value increases sample size
+| **[B]** Given the level of significance = 5%, standard deviation = 1 and mean bone density values before treatment = 1.5 SD and after treatment = 2.0 to 4.0 SD representing epsilon values = 0.5 to 2.5, the range of sample sizes is given on the respective power analyses provided for each study hypotheses -
+|      **[B.1]** **OSD_EQUALITY** : 
+|             **[B.1.1]** For 70% power, sample size = 1 to 25 
+|             **[B.1.2]** For 80% power, sample size = 2 to 32 
+|             **[B.1.3]** For 90% power, sample size = 2 to 43 
+|      **[B.2]** **OSD_NONINFERIORITY** with Delta = -0.50 SD : 
+|             **[B.2.1]** For 70% power, sample size = 1 to 5 
+|             **[B.2.2]** For 80% power, sample size = 1 to 7 
+|             **[B.2.3]** For 90% power, sample size = 1 to 9 
+|      **[B.3]** **OSD_SUPERIORITY** with Delta = +0.10 SD :  
+|             **[B.3.1]** For 70% power, sample size = 1 to 30 
+|             **[B.3.2]** For 80% power, sample size = 2 to 39 
+|             **[B.3.3]** For 90% power, sample size = 2 to 54 
+|      **[B.4]** **OSD_EQUIVALENCE** with Delta = +0.10 SD: 
+|             **[B.4.1]** For 70% power, sample size = 2 to 45 
+|             **[B.4.2]** For 80% power, sample size = 2 to 54 
+|             **[B.4.3]** For 90% power, sample size = 2 to 68 
+|
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
+```{r section_1.1.5, warning=FALSE, message=FALSE}
+##################################
+# Consolidating the power analyses charts
+##################################
+
+OSD_EQUALITY.PowerAnalysis <- ggplot(OneSampleDesign.Equality.Reshaped,
+                                     aes(x=Posttreatment.Mean.Bone.Density,
+                                         y=Sample.Size, 
+                                         color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   facet_grid(. ~ Label) +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Post-Treatment Mean Bone Density",
+                      limits=c(2,4),
+                      breaks=seq(2,4,by=0.2)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
+
+OSD_NONINFERIORITY.PowerAnalysis <- ggplot(OneSampleDesign.NonInferiority.Reshaped,
+                                     aes(x=Posttreatment.Mean.Bone.Density,
+                                         y=Sample.Size, 
+                                         color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   facet_grid(. ~ Label) +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Post-Treatment Mean Bone Density",
+                      limits=c(2,4),
+                      breaks=seq(2,4,by=0.2)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
+
+OSD_SUPERIORITY.PowerAnalysis <- ggplot(OneSampleDesign.Superiority.Reshaped,
+                                     aes(x=Posttreatment.Mean.Bone.Density,
+                                         y=Sample.Size, 
+                                         color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   facet_grid(. ~ Label) +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Post-Treatment Mean Bone Density",
+                      limits=c(2,4),
+                      breaks=seq(2,4,by=0.2)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
+
+OSD_EQUIVALENCE.PowerAnalysis <- ggplot(OneSampleDesign.Equivalence.Reshaped,
+                                     aes(x=Posttreatment.Mean.Bone.Density,
+                                         y=Sample.Size, 
+                                         color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   facet_grid(. ~ Label) +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Post-Treatment Mean Bone Density",
+                      limits=c(2,4),
+                      breaks=seq(2,4,by=0.2)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
+
+OSD_PowerAnalysis <- ggarrange(OSD_EQUALITY.PowerAnalysis,
+                               OSD_NONINFERIORITY.PowerAnalysis,
+                               OSD_SUPERIORITY.PowerAnalysis,
+                               OSD_EQUIVALENCE.PowerAnalysis,
+                               ncol=2, nrow=2)
+
+annotate_figure(OSD_PowerAnalysis,
+                top = text_grob("One-Sample Design Power Analysis by Statistical Hypothesis",
+                                color = "black",
+                                face = "bold",
+                                size = 14))
+
+```
+
+</details>
+
+##  1.2 Two-Sample Design (TSD)
+|
+| [Two-Sample Design](https://www.taylorfrancis.com/books/mono/10.1201/9781315183084/sample-size-calculations-clinical-research-shein-chung-chow-jun-shao-hansheng-wang-yuliya-lokhnygina) involves individual numeric response values from sampled subjects between treatment and control groups, or between two competing groups. In clinical research, responses could be between a test drug and a placebo control or an active control agent; or between two competing agents. Responses are assumed to be independent normal random variables with zero mean and a given pooled variance. Parameters needed for the computations are as follows:
+|
+| **[A]** <span style="color: #FF0000">Mean Treatment Response</span> : True mean response value obtained from sampled subjects in the treatment group
+|
+| **[B]** <span style="color: #FF0000">Mean Control Response</span> : True mean response value obtained from sampled subjects in the control group
+|
+| **[C]** <span style="color: #FF0000">Epsilon</span> : Mean response differences between the treatment and control groups
+|
+| **[D]** <span style="color: #FF0000">Standard Deviation</span> : Data variability based from the from sampled subjects from both the Treatment and Control groups
+|
+| **[E]** <span style="color: #FF0000">Alpha</span> : Maximum allowed Type I error
+|
+| **[F]** <span style="color: #FF0000">Beta</span> : Maximum allowed Type II error
+|
+| **[G]** <span style="color: #FF0000">Kappa</span> : Matching ratio between the Treatment and Control groups
+|
+| **[H]** <span style="color: #FF0000">Delta</span> : 
+|      **[H.1]** Minimum testing margin to establish that the mean treatment response is much better than control
+|      **[H.2]** Minimum testing margin to establish that the mean treatment response is much better than control
+|      **[H.3]** Minimum testing margin to establish that the mean treatment response is much better than control
+|
+| A case scenario was provided as follows to demonstrate sample size computation and power analysis as applied on different types of hypotheses:
+|
+| **[Case Scenario]** A clinical research study is being pursued concerning the evaluation of the effect of a test drug on cholesterol in patients with coronary heart disease (CHD). Cholesterol is the main lipid associated with arteriosclerotic vascular disease. The purpose of cholesterol testing is to identify patients at risk for arteriosclerotic heart disease. The liver metabolizes the cholesterol to its free form which is transported in the bloodtream by lipoproteins. As indicated by Pagana and Pagana (1998), nearly 75% of the cholesterol is bound to low density lipoproteins (LDLs) and 25% is bound to high density lipoproteins (HDLs). Therefore, cholesterol is the main component of LDLs and only a minimal component of HDLs and very low density lipoproteins. LDL is the most directly associated with increased risk of CHD. A pharmaceutical company is interested in conducting a clinical trial to compare two cholesterol lowering agents for treatment of patients with CHD through a parallel design. The primary efficacy parameter is the LDL.
+|
+###  1.2.1 Test for Equality (TSD_EQUALITY)
+|
+| **[Research Question]** Suppose that a difference of 6 to 12% in percent change of LDL is hypothesized between two cholesterol lowering agents. The study aims to demonstrate that the mean LDL percent change between the two cholesterol lowering agents are different. Given a level of significance of 0.05, standard deviation of 10% and matching ratio between both groups equal to 1, evaluate the sample size range for a test of equality to achieve statistical test powers equal to 70%, 80% and 90%.
+|
+| **[Null Hypothesis]** Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent change equals 0
+|
+| **[Alternative Hypothesis]** Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent does not equal 0
+|
+| **[Hypothesis Test]** Rejection of the null hypothesis implies difference between the mean LDL percent change between both lowering agents
+|
+| **[A]** <span style="color: #FF0000">Epsilon</span> : 6 to 12% at 1% intervals
+|
+| **[B]** <span style="color: #FF0000">Standard Deviation</span> : 10%
+|
+| **[C]** <span style="color: #FF0000">Alpha</span> : 0.05
+|
+| **[D]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
+|
+| **[E]** <span style="color: #FF0000">Kappa</span> : 1.0
+|
+| **[F]** <span style="color: #FF0000">Delta</span> : 0 testing margin for the Test of Equality hypothesis
+|
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
+```{r section_1.2.1, warning=FALSE, message=FALSE}
+
+##################################
+# Defining a range of possible hypothesized values for epsilon
+##################################
+epsilon=seq(6,12,1)
+
+##################################
+# Defining a fixed hypothesized value for the standard deviation
+##################################
+sd=10
+
+##################################
+# Defining a fixed hypothesized value for the Type I error
+##################################
+alpha=0.05
+
+##################################
+# Defining a range of possible hypothesized values for the Type II error
+##################################
+beta=c(0.30,0.20,0.10)
+
+##################################
+# Defining a fixed hypothesized value for kappa
+##################################
+kappa=1.0
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=(1+1/kappa)*(sd*(qnorm(1-alpha/2)+qnorm(1-beta_1))/(epsilon))^2)
+ceiling(n_Beta30)
+z_Beta30=(epsilon)/(sd*sqrt((1+1/kappa)/n_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/2))+pnorm(-z_Beta30-qnorm(1-alpha/2)))
+
+beta_2=beta[2]
+(n_Beta20=(1+1/kappa)*(sd*(qnorm(1-alpha/2)+qnorm(1-beta_2))/(epsilon))^2)
+ceiling(n_Beta20)
+z_Beta20=(epsilon)/(sd*sqrt((1+1/kappa)/n_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha/2))+pnorm(-z_Beta20-qnorm(1-alpha/2)))
+
+beta_3=beta[3]
+(n_Beta10=(1+1/kappa)*(sd*(qnorm(1-alpha/2)+qnorm(1-beta_3))/(epsilon))^2)
+ceiling(n_Beta10)
+z_Beta10=(epsilon)/(sd*sqrt((1+1/kappa)/n_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha/2))+pnorm(-z_Beta10-qnorm(1-alpha/2)))
+
+TwoSampleDesign.Equality <- as.data.frame(cbind(epsilon,n_Beta30,n_Beta20,n_Beta10))
+names(TwoSampleDesign.Equality) <- c("Mean.LDL.Percent.Change",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+TwoSampleDesign.Equality.Reshaped <- gather(TwoSampleDesign.Equality,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+TwoSampleDesign.Equality.Reshaped$Label <- rep("TSD_EQUALITY",nrow(TwoSampleDesign.Equality.Reshaped))
+
+TwoSampleDesign.Equality.Reshaped
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(TwoSampleDesign.Equality.PowerAnalysis <- ggplot(TwoSampleDesign.Equality.Reshaped,
+                                                      aes(x=Mean.LDL.Percent.Change,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Mean LDL Percent Change",
+                      limits=c(6,12),
+                      breaks=seq(6,12,by=1)) +
+  scale_y_continuous(name="Sample Size Per Group",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("Two-Sample Design : Test for Equality"))
+
+```
+
+</details>
+
+###  1.2.2 Test for Non-Inferiority (TSD_NONINFERIORITY)
+|
+| **[Research Question]** Suppose that a difference of 6 to 12% in percent change of LDL is hypothesized between two cholesterol lowering agents. The study aims to demonstrate that the mean LDL percent change for the first cholesterol lowering agent is not much worse than the second cholesterol lowering agent by a clinically meaningful difference equal to −5. Given a level of significance of 0.05, standard deviation of 10% and matching ratio between both groups equal to 1, evaluate the sample size range for a test of non-inferiority to achieve statistical test powers equal to 70%, 80% and 90%.
+|
+| **[Null Hypothesis]** Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent change <= Clinically meaningful difference
+|
+| **[Alternative Hypothesis]** Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent > Clinically meaningful difference
+|
+| **[Hypothesis Test]** Rejection of the null hypothesis implies non-inferiority of the Lowering agent 1 mean LDL percent change as compared to Lowering agent 1, given the testing margin
+|
+| **[A]** <span style="color: #FF0000">Epsilon</span> : 6 to 12% at 1% intervals
+|
+| **[B]** <span style="color: #FF0000">Standard Deviation</span> : 10%
+|
+| **[C]** <span style="color: #FF0000">Alpha</span> : 0.05
+|
+| **[D]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
+|
+| **[E]** <span style="color: #FF0000">Kappa</span> : 1.0
+|
+| **[F]** <span style="color: #FF0000">Delta</span> : -5 testing margin for the Test of Non-Inferiority hypothesis
+|
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
+```{r section_1.2.2, warning=FALSE, message=FALSE}
+
+##################################
+# Defining a range of possible hypothesized values for epsilon
+##################################
+epsilon=seq(6,12,1)
+
+##################################
+# Defining a fixed hypothesized value for the standard deviation
+##################################
+sd=10
+
+##################################
+# Defining a fixed hypothesized value for the Type I error
+##################################
+alpha=0.05
+
+##################################
+# Defining a range of possible hypothesized values for the Type II error
+##################################
+beta=c(0.30,0.20,0.10)
+
+##################################
+# Defining a fixed hypothesized value for kappa
+##################################
+kappa=1.0
+
+##################################
+# Defining the non-inferiority delta
+##################################
+delta=-5
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=(1+1/kappa)*(sd*(qnorm(1-alpha)+qnorm(1-beta_1))/(epsilon-delta))^2)
+ceiling(n_Beta30)
+z_Beta30=(epsilon-delta)/(sd*sqrt((1+1/kappa)/n_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha))+pnorm(-z_Beta30-qnorm(1-alpha)))
+
+beta_2=beta[2]
+(n_Beta20=(1+1/kappa)*(sd*(qnorm(1-alpha)+qnorm(1-beta_2))/(epsilon-delta))^2)
+ceiling(n_Beta20)
+z_Beta20=(epsilon-delta)/(sd*sqrt((1+1/kappa)/n_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha))+pnorm(-z_Beta20-qnorm(1-alpha)))
+
+beta_3=beta[3]
+(n_Beta10=(1+1/kappa)*(sd*(qnorm(1-alpha)+qnorm(1-beta_3))/(epsilon-delta))^2)
+ceiling(n_Beta10)
+z_Beta10=(epsilon-delta)/(sd*sqrt((1+1/kappa)/n_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha))+pnorm(-z_Beta10-qnorm(1-alpha)))
+
+TwoSampleDesign.NonInferiority <- as.data.frame(cbind(epsilon,n_Beta30,n_Beta20,n_Beta10))
+names(TwoSampleDesign.NonInferiority) <- c("Mean.LDL.Percent.Change",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+TwoSampleDesign.NonInferiority.Reshaped <- gather(TwoSampleDesign.NonInferiority,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+TwoSampleDesign.NonInferiority.Reshaped$Label <- rep("TSD_NONINFERIORITY",nrow(TwoSampleDesign.NonInferiority.Reshaped))
+
+TwoSampleDesign.NonInferiority.Reshaped
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(TwoSampleDesign.NonInferiority.PowerAnalysis <-ggplot(TwoSampleDesign.NonInferiority.Reshaped,
+                                                      aes(x=Mean.LDL.Percent.Change,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Mean LDL Percent Change",
+                      limits=c(6,12),
+                      breaks=seq(6,12,by=1)) +
+  scale_y_continuous(name="Sample Size Per Group",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("Two-Sample Design : Test for Non-Inferiority"))
+
+```
+
+</details>
+
+###  1.2.3 Test for Superiority (TSD_SUPERIORITY)
+|
+| **[Research Question]** Suppose that a difference of 6 to 12% in percent change of LDL is hypothesized between two cholesterol lowering agents. The study aims to demonstrate that the mean LDL percent change for the first cholesterol lowering agent is much better than the second cholesterol lowering agent by a clinically meaningful difference equal to +5. Given a level of significance of 0.05, standard deviation of 10% and matching ratio between both groups equal to 1, evaluate the sample size range for a test of superiority to achieve statistical test powers equal to 70%, 80% and 90%.
+|
+| **[Null Hypothesis]** Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent change <= Clinically meaningful difference
+|
+| **[Alternative Hypothesis]** Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent > Clinically meaningful difference
+|
+| **[Hypothesis Test]** Rejection of the null hypothesis implies superiority of the Lowering agent 1 mean LDL percent change as compared to Lowering agent 1, given the testing margin
+|
+| **[A]** <span style="color: #FF0000">Epsilon</span> : 6 to 12% at 1% intervals
+|
+| **[B]** <span style="color: #FF0000">Standard Deviation</span> : 10%
+|
+| **[C]** <span style="color: #FF0000">Alpha</span> : 0.05
+|
+| **[D]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
+|
+| **[E]** <span style="color: #FF0000">Kappa</span> : 1.0
+|
+| **[F]** <span style="color: #FF0000">Delta</span> : +1 testing margin for the Test of Superiority hypothesis
+|
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
+```{r section_1.2.3, warning=FALSE, message=FALSE}
+
+##################################
+# Defining a range of possible hypothesized values for epsilon
+##################################
+epsilon=seq(6,12,1)
+
+##################################
+# Defining a fixed hypothesized value for the standard deviation
+##################################
+sd=10
+
+##################################
+# Defining a fixed hypothesized value for the Type I error
+##################################
+alpha=0.05
+
+##################################
+# Defining a range of possible hypothesized values for the Type II error
+##################################
+beta=c(0.30,0.20,0.10)
+
+##################################
+# Defining a fixed hypothesized value for kappa
+##################################
+kappa=1.0
+
+##################################
+# Defining the superiority delta
+##################################
+delta=1
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=(1+1/kappa)*(sd*(qnorm(1-alpha)+qnorm(1-beta_1))/(epsilon-delta))^2)
+ceiling(n_Beta30)
+z_Beta30=(epsilon-delta)/(sd*sqrt((1+1/kappa)/n_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha))+pnorm(-z_Beta30-qnorm(1-alpha)))
+
+beta_2=beta[2]
+(n_Beta20=(1+1/kappa)*(sd*(qnorm(1-alpha)+qnorm(1-beta_2))/(epsilon-delta))^2)
+ceiling(n_Beta20)
+z_Beta20=(epsilon-delta)/(sd*sqrt((1+1/kappa)/n_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha))+pnorm(-z_Beta20-qnorm(1-alpha)))
+
+beta_3=beta[3]
+(n_Beta10=(1+1/kappa)*(sd*(qnorm(1-alpha)+qnorm(1-beta_3))/(epsilon-delta))^2)
+ceiling(n_Beta10)
+z_Beta10=(epsilon-delta)/(sd*sqrt((1+1/kappa)/n_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha))+pnorm(-z_Beta10-qnorm(1-alpha)))
+
+TwoSampleDesign.Superiority <- as.data.frame(cbind(epsilon,n_Beta30,n_Beta20,n_Beta10))
+names(TwoSampleDesign.Superiority) <- c("Mean.LDL.Percent.Change",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+TwoSampleDesign.Superiority.Reshaped <- gather(TwoSampleDesign.Superiority,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+TwoSampleDesign.Superiority.Reshaped$Label <- rep("TSD_SUPERIORITY",nrow(TwoSampleDesign.Superiority.Reshaped))
+
+TwoSampleDesign.Superiority.Reshaped
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(TwoSampleDesign.Superiority.PowerAnalysis <-ggplot(TwoSampleDesign.Superiority.Reshaped,
+                                                      aes(x=Mean.LDL.Percent.Change,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Mean LDL Percent Change",
+                      limits=c(6,12),
+                      breaks=seq(6,12,by=1)) +
+  scale_y_continuous(name="Sample Size Per Group",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("Two-Sample Design : Test for Superiority"))
+
+```
+
+</details>
+
+###  1.2.4 Test for Equivalence (TSD_EQUIVALENCE)
+
+|
+| **[Research Question]** Suppose that a difference of 6 to 12% in percent change of LDL is hypothesized between two cholesterol lowering agents. The study aims to demonstrate that the mean LDL percent change for the first cholesterol lowering agent is not much worse or better than the second cholesterol lowering agent by a clinically meaningful difference equal to +5. Given a level of significance of 0.05, standard deviation of 10% and matching ratio between both groups equal to 1, evaluate the sample size range for a test of equivalence to achieve statistical test powers equal to 70%, 80% and 90%.
+|
+| **[Null Hypothesis]** Absolute value of (Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent change) >= Clinically meaningful difference
+|
+| **[Alternative Hypothesis]** Absolute value of (Lowering agent 1 mean LDL percent change - Lowering agent 2 mean LDL percent) < Clinically meaningful difference
+|
+| **[Hypothesis Test]** Rejection of the null hypothesis implies equivalence of the Lowering agent 1 mean LDL percent change as compared to Lowering agent 1, given the testing margin
+|
+| **[A]** <span style="color: #FF0000">Epsilon</span> : 6 to 12% at 1% intervals
+|
+| **[B]** <span style="color: #FF0000">Standard Deviation</span> : 10%
+|
+| **[C]** <span style="color: #FF0000">Alpha</span> : 0.05
+|
+| **[D]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
+|
+| **[E]** <span style="color: #FF0000">Kappa</span> : 1.0
+|
+| **[F]** <span style="color: #FF0000">Delta</span> : +1 testing margin for the Test of Equivalence hypothesis
+|
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
+```{r section_1.2.4, warning=FALSE, message=FALSE}
+
+##################################
+# Defining a range of possible hypothesized values for epsilon
+##################################
+epsilon=seq(6,12,1)
+
+##################################
+# Defining a fixed hypothesized value for the standard deviation
+##################################
+sd=10
+
+##################################
+# Defining a fixed hypothesized value for the Type I error
+##################################
+alpha=0.05
+
+##################################
+# Defining a range of possible hypothesized values for the Type II error
+##################################
+beta=c(0.30,0.20,0.10)
+
+##################################
+# Defining a fixed hypothesized value for kappa
+##################################
+kappa=1.0
+
+##################################
+# Defining the equivalence delta
+##################################
+delta=1
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=(1+1/kappa)*(sd*(qnorm(1-alpha)+qnorm(1-beta_1/2))/(abs(epsilon)-delta))^2)
+ceiling(n_Beta30)
+z_Beta30=(abs(epsilon)-delta)/(sd*sqrt((1+1/kappa)/n_Beta30))
+(Power_Beta30=2*(pnorm(z_Beta30-qnorm(1-alpha))+pnorm(-z_Beta30-qnorm(1-alpha)))-1)
+
+beta_2=beta[2]
+(n_Beta20=(1+1/kappa)*(sd*(qnorm(1-alpha)+qnorm(1-beta_2/2))/(abs(epsilon)-delta))^2)
+ceiling(n_Beta20)
+z_Beta20=(abs(epsilon)-delta)/(sd*sqrt((1+1/kappa)/n_Beta20))
+(Power_Beta20=2*(pnorm(z_Beta20-qnorm(1-alpha))+pnorm(-z_Beta20-qnorm(1-alpha)))-1)
+
+beta_3=beta[3]
+(n_Beta10=(1+1/kappa)*(sd*(qnorm(1-alpha)+qnorm(1-beta_3/2))/(abs(epsilon)-delta))^2)
+ceiling(n_Beta10)
+z_Beta10=(abs(epsilon)-delta)/(sd*sqrt((1+1/kappa)/n_Beta10))
+(Power_Beta10=2*(pnorm(z_Beta10-qnorm(1-alpha))+pnorm(-z_Beta10-qnorm(1-alpha)))-1)
+
+TwoSampleDesign.Equivalence <- as.data.frame(cbind(epsilon,n_Beta30,n_Beta20,n_Beta10))
+names(TwoSampleDesign.Equivalence) <- c("Mean.LDL.Percent.Change",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+TwoSampleDesign.Equivalence.Reshaped <- gather(TwoSampleDesign.Equivalence,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+TwoSampleDesign.Equivalence.Reshaped$Label <- rep("TSD_EQUIVALENCE",nrow(TwoSampleDesign.Equivalence.Reshaped))
+
+TwoSampleDesign.Equivalence.Reshaped
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(TwoSampleDesign.Equivalence.PowerAnalysis <-ggplot(TwoSampleDesign.Equivalence.Reshaped,
+                                                      aes(x=Mean.LDL.Percent.Change,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Mean LDL Percent Change",
+                      limits=c(6,12),
+                      breaks=seq(6,12,by=1)) +
+  scale_y_continuous(name="Sample Size Per Group",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("Two-Sample Design : Test for Equivalence"))
+
+```
+
+</details>
+
+###  1.2.5 Consolidated Evaluation
+|
+| **[A]** The minimum sample size required for the treatment group in a Two-Sample Design study is dependent upon the following factors defined and hypothesized prior to the clinical research:
+|      **[A.1]** **Study Hypothesis** (Equality, Non-Inferiority, Superiority, Equivalence)
+|      **[A.2]** **Level of significance** (Alpha) : Lower value increases sample size
+|      **[A.3]** **Power of the test** (Beta) : Higher value increases sample size
+|      **[A.4]** **Data variability** (Standard Deviation) : Higher value increases sample size
+|      **[A.5]** **Epsilon** (Difference between Mean Response and Reference) : Lower value increases sample size
+|      **[A.6]** **Delta** (Testing margin, as applicable) : Higher value increases sample size
+| **[B]** Given the level of significance = 5%, standard deviation = 10, matching sample size ratio between groups = 1 and LDL percent change between two cholesterol lowering agents representing epsilon values = 6 to 12%, the range of sample sizes is given on the respective power analyses provided for each study hypotheses -
+|      **[B.1]** **OSD_EQUALITY** : 
+|             **[B.1.1]** For 70% power, sample size = 9 to 35 
+|             **[B.1.2]** For 80% power, sample size = 11 to 44 
+|             **[B.1.3]** For 90% power, sample size = 15 to 59 
+|      **[B.2]** **OSD_NONINFERIORITY** with Delta = -0.50 SD : 
+|             **[B.2.1]** For 70% power, sample size = 4 to 8 
+|             **[B.2.2]** For 80% power, sample size = 5 to 11 
+|             **[B.2.3]** For 90% power, sample size = 6 to 15 
+|      **[B.3]** **OSD_SUPERIORITY** with Delta = +0.10 SD :  
+|             **[B.3.1]** For 70% power, sample size = 8 to 38 
+|             **[B.3.2]** For 80% power, sample size = 11 to 50 
+|             **[B.3.3]** For 90% power, sample size = 15 to 69 
+|      **[B.4]** **OSD_EQUIVALENCE** with Delta = +0.10 SD: 
+|             **[B.4.1]** For 70% power, sample size = 12 to 58 
+|             **[B.4.2]** For 80% power, sample size = 15 to 69 
+|             **[B.4.3]** For 90% power, sample size = 18 to 87 
+|
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
+```{r section_1.2.5, warning=FALSE, message=FALSE}
+
+##################################
+# Consolidating the power analyses charts
+##################################
+TSD_EQUALITY.PowerAnalysis <- ggplot(TwoSampleDesign.Equality.Reshaped,
+                                     aes(x=Mean.LDL.Percent.Change,
+                                         y=Sample.Size, 
+                                         color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   facet_grid(. ~ Label) +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Mean LDL Percent Change",
+                      limits=c(6,12),
+                      breaks=seq(6,12,by=1)) +
+  scale_y_continuous(name="Sample Size Per Group",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
+
+TSD_NONINFERIORITY.PowerAnalysis <- ggplot(TwoSampleDesign.NonInferiority.Reshaped,
+                                     aes(x=Mean.LDL.Percent.Change,
+                                         y=Sample.Size, 
+                                         color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   facet_grid(. ~ Label) +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Mean LDL Percent Change",
+                      limits=c(6,12),
+                      breaks=seq(6,12,by=1)) +
+  scale_y_continuous(name="Sample Size Per Group",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
+
+TSD_SUPERIORITY.PowerAnalysis <- ggplot(TwoSampleDesign.Superiority.Reshaped,
+                                     aes(x=Mean.LDL.Percent.Change,
+                                         y=Sample.Size, 
+                                         color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   facet_grid(. ~ Label) +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Mean LDL Percent Change",
+                      limits=c(6,12),
+                      breaks=seq(6,12,by=1)) +
+  scale_y_continuous(name="Sample Size Per Group",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
+
+TSD_EQUIVALENCE.PowerAnalysis <- ggplot(TwoSampleDesign.Equivalence.Reshaped,
+                                     aes(x=Mean.LDL.Percent.Change,
+                                         y=Sample.Size, 
+                                         color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   facet_grid(. ~ Label) +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Mean LDL Percent Change",
+                      limits=c(6,12),
+                      breaks=seq(6,12,by=1)) +
+  scale_y_continuous(name="Sample Size Per Group",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
+
+TSD_PowerAnalysis <- ggarrange(TSD_EQUALITY.PowerAnalysis,
+                               TSD_NONINFERIORITY.PowerAnalysis,
+                               TSD_SUPERIORITY.PowerAnalysis,
+                               TSD_EQUIVALENCE.PowerAnalysis,
+                               ncol=2, nrow=2)
+
+annotate_figure(TSD_PowerAnalysis,
+                top = text_grob("Two-Sample Design Power Analysis by Statistical Hypothesis",
+                                color = "black",
+                                face = "bold",
+                                size = 14))
+
+```
+
+</details>
+
+##  1.3 Multiple-Sample Design One-Way ANOVA Pairwise (MSDOWAP)
+|
+| [Multiple-Sample Design One-Way ANOVA Pairwise](https://www.taylorfrancis.com/books/mono/10.1201/9781315183084/sample-size-calculations-clinical-research-shein-chung-chow-jun-shao-hansheng-wang-yuliya-lokhnygina) involves individual numeric response values from sampled subjects across three or more competing treatment groups. In clinical research, responses could be between multiple test drugs and a placebo control or an active control agent; or between multiple competing agents. The response and treatment variables are modeled using a One-Way ANOVA model involving the fixed effect of the treatment and random errors which are assumed to be independent and identically distributed normal random variables with zero mean and a given variance. For a pairwise comparison between treatments, all possible combinations must be analyzed. Due to the multiple comparisons inflating the Type I error, adjustments arre made for controlling the overall Type I error rate at the desired significance level. Parameters needed for the computations are as follows:
+|
+| **[A]** <span style="color: #FF0000">Mean Treatment 1 Response</span> : True mean response value obtained from sampled subjects in the first treatment group
+|
+| **[B]** <span style="color: #FF0000">Mean Treatment 2 Response</span> : True mean response value obtained from sampled subjects in the second treatment group
+|
+| **[C]** <span style="color: #FF0000">Epsilon</span> : Mean response differences between the two treatment groups
+|
+| **[D]** <span style="color: #FF0000">Standard Deviation</span> : Data variability based from the from sampled subjects from both treatment groups
+|
+| **[E]** <span style="color: #FF0000">Alpha</span> : Maximum allowed Type I error
+|
+| **[F]** <span style="color: #FF0000">Beta</span> : Maximum allowed Type II error
+|
+| **[G]** <span style="color: #FF0000">Tau</span> : Number of treatment groups
+|
+| A case scenario was provided as follows to demonstrate sample size computation and power analysis as applied on different treatment pairs:
+|
+| **[Case Scenario]** A clinical research study was conducted to investigate pharmaceutical compounds for treatment of patients with cancer. The investigator is not only interested in showing efficacy of the test drug but also in establishing the dose response curve. To achieve this study objective, a three-arm parallel group, double-blind, randomized clinical trial was designed to compare three treatments: A (Placebo), B (10 mg) and C (30 mg). Based on the results from the pilot study, it is estimated that the standard deviation is 3.5.
+|
+###  1.3.1 Test for Equality (MSDOWAP_EQUALITY)
+|
+| **[Research Question]** Suppose that the hypothesized mean clinical response for the placebo treatment is 9.0. However, clinical responses for Treatments B and C were expected to range from  11.0 to 13.0 and 15.0 to 17.0, respectively, with increments of 0.5. The study aims to demonstrate the efficacy of each treatment as pairwise compared against each other. Given a level of significance of 0.05, evaluate the sample size range for a test of equality to achieve statistical test powers equal to 70%, 80% and 90%.
+|
+| **[Null Hypothesis]** Mean clinical response of the first evaluated treatment equals the Mean clinical response of the second evaluated treatment
+|
+| **[Alternative Hypothesis]** Mean clinical response of the first evaluated treatment is not equal to the Mean clinical response of the second evaluated treatment
+|
+| **[Hypothesis Test]** Rejection of the null hypothesis implies difference between the mean clinical response values between both evaluated treatments
+|
+| **[A]** <span style="color: #FF0000">Mean Response : Treatment A</span> : 9.0
+|
+| **[B]** <span style="color: #FF0000">Mean Response : Treatment B</span> : 11.0 to 13.0 at 0.5 intervals
+|
+| **[C]** <span style="color: #FF0000">Mean Response : Treatment C</span> : 15.0 to 17.0 at 0.5 intervals 
+|
+| **[D]** <span style="color: #FF0000">Standard Deviation</span> : 3.50
+|
+| **[E]** <span style="color: #FF0000">Alpha</span> : 0.05
+|
+| **[F]** <span style="color: #FF0000">Beta</span> : 0.30, 0.20 and 0.10 corresponding to 70%, 80% and 90% statistical powers
+|
+| **[G]** <span style="color: #FF0000">Tau</span> : 3 representing the number of treatments
+|
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
+```{r section_1.3.1, warning=FALSE, message=FALSE}
+
+##################################
+# Defining a fixed hypothesized value for mu_A
+##################################
+mu_AF=9.0
+
+##################################
+# Defining a range of hypothesized values for mu_B
+##################################
+mu_BR=seq(11.0,13.0,0.5)
+##################################
+# Defining a fixed hypothesized value for mu_B
+# using the highest value from the range
+##################################
+mu_BF=13.0
+
+##################################
+# Defining a range of hypothesized value for mu_C
+##################################
+mu_CR=seq(15.0,17.0,0.5)
+
+##################################
+# Defining a fixed hypothesized value for the standard deviation
+##################################
+sd=3.5
+
+##################################
+# Defining a fixed hypothesized value for the Type I error
+##################################
+alpha=0.05
+
+##################################
+# Defining a range of possible hypothesized values for the Type II error
+##################################
+beta=c(0.30,0.20,0.10)
+
+##################################
+# Defining the number of treatments
+##################################
+tau=3
+
+##################################
+# Conducting a pairwise comparison
+# between Treatments A and B
+##################################
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_1))/(mu_BR-mu_AF))^2)
+ceiling(n_Beta30)
+z_Beta30=(mu_BR-mu_AF)/(sd*sqrt(2/n_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta30-qnorm(1-alpha/(2/tau))))
+
+beta_2=beta[2]
+(n_Beta20=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_2))/(mu_BR-mu_AF))^2)
+ceiling(n_Beta20)
+z_Beta20=(mu_BR-mu_AF)/(sd*sqrt(2/n_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta20-qnorm(1-alpha/(2/tau))))
+
+beta_3=beta[3]
+(n_Beta10=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_3))/(mu_BR-mu_AF))^2)
+ceiling(n_Beta10)
+z_Beta10=(mu_BR-mu_AF)/(sd*sqrt(2/n_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta10-qnorm(1-alpha/(2/tau))))
+
+MultipleSampleDesign.AB.Equality <- as.data.frame(cbind(mu_BR,n_Beta30,n_Beta20,n_Beta10))
+names(MultipleSampleDesign.AB.Equality) <- c("Clinical.Response",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+MultipleSampleDesign.AB.Equality.Reshaped <- gather(MultipleSampleDesign.AB.Equality,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+MultipleSampleDesign.AB.Equality.Reshaped$Label <- rep("MSDOWAP_AB_EQUALITY",nrow(MultipleSampleDesign.AB.Equality.Reshaped))
+
+MultipleSampleDesign.AB.Equality.Reshaped
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(MultipleSampleDesign.AB.Equality.PowerAnalysis <-    ggplot(MultipleSampleDesign.AB.Equality.Reshaped,
+                                                      aes(x=Clinical.Response,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Clinical Response",
+                      limits=c(11,13),
+                      breaks=seq(11,13,by=0.5)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("Multiple-Sample Design : Test for Equality Between A Versus B"))
+
+##################################
+# Conducting a pairwise comparison
+# between Treatments A and C
+##################################
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_1))/(mu_CR-mu_AF))^2)
+ceiling(n_Beta30)
+z_Beta30=(mu_CR-mu_AF)/(sd*sqrt(2/n_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta30-qnorm(1-alpha/(2/tau))))
+
+beta_2=beta[2]
+(n_Beta20=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_2))/(mu_CR-mu_AF))^2)
+ceiling(n_Beta20)
+z_Beta20=(mu_CR-mu_AF)/(sd*sqrt(2/n_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta20-qnorm(1-alpha/(2/tau))))
+
+beta_3=beta[3]
+(n_Beta10=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_3))/(mu_CR-mu_AF))^2)
+ceiling(n_Beta10)
+z_Beta10=(mu_CR-mu_AF)/(sd*sqrt(2/n_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta10-qnorm(1-alpha/(2/tau))))
+
+MultipleSampleDesign.AC.Equality <- as.data.frame(cbind(mu_CR,n_Beta30,n_Beta20,n_Beta10))
+names(MultipleSampleDesign.AC.Equality) <- c("Clinical.Response",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+MultipleSampleDesign.AC.Equality.Reshaped <- gather(MultipleSampleDesign.AC.Equality,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+MultipleSampleDesign.AC.Equality.Reshaped$Label <- rep("MSDOWAP_AC_EQUALITY",nrow(MultipleSampleDesign.AC.Equality.Reshaped))
+
+MultipleSampleDesign.AC.Equality.Reshaped
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(MultipleSampleDesign.AC.Equality.PowerAnalysis <-    ggplot(MultipleSampleDesign.AC.Equality.Reshaped,
+                                                      aes(x=Clinical.Response,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Clinical Response",
+                      limits=c(15,17),
+                      breaks=seq(15,17,by=0.5)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("Multiple-Sample Design : Test for Equality Between A Versus C"))
+
+##################################
+# Conducting a pairwise comparison
+# between Treatments B and C
+##################################
+
+##################################
+# Computing the range of samples sizes based on different levels of Type II errors
+##################################
+beta_1=beta[1]
+(n_Beta30=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_1))/(mu_CR-mu_BF))^2)
+ceiling(n_Beta30)
+z_Beta30=(mu_CR-mu_BF)/(sd*sqrt(2/n_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta30-qnorm(1-alpha/(2/tau))))
+
+beta_2=beta[2]
+(n_Beta20=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_2))/(mu_CR-mu_BF))^2)
+ceiling(n_Beta20)
+z_Beta20=(mu_CR-mu_BF)/(sd*sqrt(2/n_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta20-qnorm(1-alpha/(2/tau))))
+
+beta_3=beta[3]
+(n_Beta10=2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta_3))/(mu_CR-mu_BF))^2)
+ceiling(n_Beta10)
+z_Beta10=(mu_CR-mu_BF)/(sd*sqrt(2/n_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha/(2/tau)))+pnorm(-z_Beta10-qnorm(1-alpha/(2/tau))))
+
+MultipleSampleDesign.BC.Equality <- as.data.frame(cbind(mu_CR,n_Beta30,n_Beta20,n_Beta10))
+names(MultipleSampleDesign.BC.Equality) <- c("Clinical.Response",
+                                 "Power=70%",
+                                 "Power=80%",
+                                 "Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+MultipleSampleDesign.BC.Equality.Reshaped <- gather(MultipleSampleDesign.BC.Equality,
+                                            "Power=70%","Power=80%","Power=90%",
+                                            key="Power",
+                                            value="Sample.Size")
+MultipleSampleDesign.BC.Equality.Reshaped$Label <- rep("MSDOWAP_BC_EQUALITY",nrow(MultipleSampleDesign.BC.Equality.Reshaped))
+
+MultipleSampleDesign.BC.Equality.Reshaped
+
+##################################
+# Plotting the sample sizes and power curves
+##################################
+(MultipleSampleDesign.BC.Equality.PowerAnalysis <-    ggplot(MultipleSampleDesign.BC.Equality.Reshaped,
+                                                      aes(x=Clinical.Response,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Clinical Response",
+                      limits=c(15,17),
+                      breaks=seq(15,17,by=0.5)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
+  ggtitle("Multiple-Sample Design : Test for Equality Between B Versus C"))
+
+```
+
+</details>
+
+###  1.3.2 Consolidated Evaluation
+|
+| **[A]** The minimum sample size required for each treatment group in a Multiple-Sample Design One-Way ANOVA Pairwise study is dependent upon the following factors defined and hypothesized prior to the clinical research:
+|      **[A.1]** **Level of significance** (Alpha) : Lower value increases sample size
+|      **[A.2]** **Power of the test** (Beta) : Higher value increases sample size
+|      **[A.3]** **Data variability** (Standard Deviation) : Higher value increases sample size
+|      **[A.4]** **Epsilon** (Difference between pairwise Mean Responses) : Lower value increases sample size
+|      **[A.5]** **Tau** (Number of treatment groups) : Higher value increases sample size
+| **[B]** Given the level of significance = 5%, standard deviation = 3.5, number of treatments = 3 and a varying range of clinical response values across pairwise combinations of treatments, the sample size is determined as the maximum number obtained for all computations under each statistical power -
+|      **[B.1]** 70% power, sample size = 24
+|      **[B.2]** 80% power, sample size = 32  
+|      **[B.3]** 90% power, sample size = 45  
+|
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
+```{r section_1.3.2, warning=FALSE, message=FALSE}
+
+##################################
+# Consolidating the power analyses charts
+##################################
+MSDOWAP.AB.Equality.PowerAnalysis <- ggplot(MultipleSampleDesign.AB.Equality.Reshaped,
+                                                      aes(x=Clinical.Response,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   facet_grid(. ~ Label) +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Clinical Response",
+                      limits=c(11,13),
+                      breaks=seq(11,13,by=0.5)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
+
+MSDOWAP.AC.Equality.PowerAnalysis <- ggplot(MultipleSampleDesign.AC.Equality.Reshaped,
+                                                      aes(x=Clinical.Response,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   facet_grid(. ~ Label) +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Clinical Response",
+                      limits=c(15,17),
+                      breaks=seq(15,17,by=0.5)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
+
+MSDOWAP.BC.Equality.PowerAnalysis <- ggplot(MultipleSampleDesign.BC.Equality.Reshaped,
+                                                      aes(x=Clinical.Response,
+                                                          y=Sample.Size, 
+                                                          color=Power)) +
+   geom_line(size=1)+
+   geom_point(size=4)+
+   theme_bw() +
+   facet_grid(. ~ Label) +
+   scale_color_brewer(palette="Paired") +
+   scale_x_continuous(name="Hypothesized Clinical Response",
+                      limits=c(15,17),
+                      breaks=seq(15,17,by=0.5)) +
+  scale_y_continuous(name="Treatment Group Sample Size",
+                     limits=c(0,100),
+                     breaks=seq(0,100,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
+        legend.position="top",
+        axis.title.y=element_text(color="black",face="bold",size=12),
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50))
+
+
+MSDOWAP_PowerAnalysis <- ggarrange(MSDOWAP.AB.Equality.PowerAnalysis,
+                                   MSDOWAP.AC.Equality.PowerAnalysis,
+                                   MSDOWAP.BC.Equality.PowerAnalysis,
+                                   ncol=2, nrow=2)
+
+annotate_figure(MSDOWAP_PowerAnalysis,
+                top = text_grob("Multiple-Sample Design One-Way ANOVA Power Analysis by Pairwise Comparison",
+                                color = "black",
+                                face = "bold",
+                                size = 14))
+
+```
+
+</details>
+|
+# **2. Summary** <a name="summary"></a>
+|
+| ![](D:/Github_Codes/ProjectPortfolio/Portfolio_Project_31/docs/Project31_Summary.png)
+|
+# **3. References**
+|
+| **[Book]** [Sample Size Calculations in Clinical Research](https://www.taylorfrancis.com/books/mono/10.1201/9781315183084/sample-size-calculations-clinical-research-shein-chung-chow-jun-shao-hansheng-wang-yuliya-lokhnygina) by Shein-Chung Chow, Jun Shao, Hansheng Wang and Yuliya Lokhnygina
+| **[Book]** [Clinical Trial Data Analysis Using R and SAS](https://www.taylorfrancis.com/books/mono/10.1201/9781315155104/clinical-trial-data-analysis-using-sas-ding-geng-din-chen-karl-peace-pinggao-zhang) by Ding-Geng Chen, Karl Peace and Pinggao Zhang
+| **[Book]** [Design and Analysis of Experiments with R](https://www.taylorfrancis.com/books/mono/10.1201/b17883/design-analysis-experiments-john-lawson) by John Lawson
+| **[Book]** [Design and Analysis of Experiments](https://link.springer.com/book/10.1007/978-3-319-52250-0) by Angela Dean , Daniel Voss and Danel Draguljić
+| **[Book]** [Design and Analysis of Experiments](https://bcs.wiley.com/he-bcs/Books?action=index&bcsId=10790&itemId=1119320933) by Douglas Montgomery
+| **[R Package]** [rstatix](https://mran.microsoft.com/web/packages/rstatix/index.html) by Alboukadel Kassambara
+| **[R Package]** [car](https://cran.r-project.org/web/packages/car/vignettes/embedding.pdf) by John Fox and Sanford Weisberg
+| **[R Package]** [effects](https://cran.r-project.org/web/packages/effects/vignettes/methods-supported-by-effects.pdf) by John Fox and Sanford Weisberg
+| **[R Package]** [multcomp](https://cran.r-project.org/web/packages/multcomp/vignettes/generalsiminf.pdf) by Torsten Hothorn, Frank Bretz and Peter Westfall
+| **[R Package]** [psych](http://personality-project.org/r/overview.pdf) by William Revelle
+| **[R Package]** [bootstrap](https://cran.r-project.org/web/packages/bootstrap/bootstrap.pdf) by Robert Tibshirani
+| **[R Package]** [moments](https://cran.r-project.org/web/packages/moments/index.html) by Lukasz Komsta and Frederick Novomestky
+| **[R Package]** [dplyr](https://cran.r-project.org/web/packages/dplyr/index.html) by Hadley Wickham
+| **[R Package]** [ggplot2](https://cran.r-project.org/web/packages/ggplot2/) by Hadley Wickham
+| **[R Package]** [ggpubr](https://cran.r-project.org/web/packages/ggpubr/index.html) by Alboukadel Kassambara
+| **[R Package]** [ggfortify](https://cran.r-project.org/web/packages/ggfortify/index.html) by Yuan Tang
+| **[R Package]** [trend](https://cran.r-project.org/web/packages/trend/index.html) by Thorsten Pohlert
+| **[Article]** [Power and Sample Size](https://powerandsamplesize.com/) by HyLown Consulting Team
+| **[Article]** [An Introduction to Different Types of Study Design](https://s4be.cochrane.org/blog/2021/04/06/an-introduction-to-different-types-of-study-design/) by Hadi Abbas
+| **[Article]** [Case-Control and Cohort Studies: A Brief Overview](https://s4be.cochrane.org/blog/2017/12/06/case-control-and-cohort-studies-overview/) by Saul Crandon
+| **[Article]** [Cohort Studies: Prospective and Retrospective Designs](https://s4be.cochrane.org/blog/2019/03/06/cohort-studies-prospective-retrospective-designs/) by Izabel de Oliveira
+| **[Article]** [Prevalence vs. Incidence: What is the Difference](https://s4be.cochrane.org/blog/2020/11/06/prevalence-vs-incidence-what-is-the-difference/) by Georgina Ford
+| **[Article]** [Randomized Clinical Trial (RCT): Simple Definition, Phases, and Types](https://www.statisticshowto.com/experimental-design/randomized-clinical-trial-rcts/) by Statistics-How-To Team
+|
+|
+|
+|
