@@ -1,6 +1,6 @@
 ---
 title: "Statistical Evaluation : Sample Size and Power Calculations for Tests Comparing Means in Clinical Research"
-author: "John Pauline Pineda"
+author: "<b><a href='https://github.com/JohnPaulinePineda'>John Pauline Pineda</a></b>"
 date: "May 7, 2023"
 output: 
   html_document:
@@ -1722,7 +1722,7 @@ annotate_figure(MSDOWAP_PowerAnalysis,
 |
 # **2. Summary** <a name="summary"></a>
 |
-| ![](D:/Github_Codes/ProjectPortfolio/Portfolio_Project_31/docs/Project31_Summary.png)
+| ![](D:/Github_Codes/ProjectPortfolio/Portfolio_Project_31/images/Project31_Summary.png)
 |
 # **3. References**
 |
